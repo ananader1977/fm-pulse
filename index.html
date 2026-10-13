@@ -1,0 +1,428 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body style="margin:0"><title>FM Pulse UAE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: phone-first app shell — sticky app bar, scrolling view, fixed bottom tab bar; widens to two columns on desktop */
+:root{
+  --brand:#0E2D52;        /* Al Bonian navy (brand primary – swap for exact hex) */
+  --brand-ink:#ffffff;
+  --accent:#D9822B;       /* Al Bonian amber accent (swap for exact hex) */
+  --bg:#F3F5F8;
+  --surface:#FFFFFF;
+  --surface-2:#E9EDF3;
+  --fg:#14202E;
+  --muted:#5B6878;
+  --line:#D6DDE6;
+  --good:#2E8B57;
+  --chip:#E3E9F1;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --brand:#16385F;--brand-ink:#F2F5F9;--accent:#F0A04B;--bg:#0C1520;--surface:#132030;--surface-2:#1B2B3E;
+  --fg:#E6ECF3;--muted:#9AA8B8;--line:#26384D;--good:#5CC08A;--chip:#1E3045;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --brand:#16385F;--brand-ink:#F2F5F9;--accent:#F0A04B;--bg:#0C1520;--surface:#132030;--surface-2:#1B2B3E;
+  --fg:#E6ECF3;--muted:#9AA8B8;--line:#26384D;--good:#5CC08A;--chip:#1E3045;color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.appbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--brand);color:var(--brand-ink);
+  padding:12px 16px 10px;border-bottom:3px solid var(--accent)}
+.appbar .row{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.mark{width:34px;height:34px;flex:none;border-radius:8px;background:var(--accent);display:grid;place-items:center;
+  font-family:var(--f-display);font-weight:700;font-size:18px;color:#1A1206;letter-spacing:.02em}
+.brandtxt{min-width:0;flex:1}
+.brandtxt h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:22px;letter-spacing:.03em;text-transform:uppercase;line-height:1.1}
+.brandtxt small{display:block;font-size:12px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upd{font-family:var(--f-mono);font-size:11px;text-align:right;opacity:.9;line-height:1.3}
+.upd b{display:block;color:var(--accent);font-weight:500}
+
+main{max-width:1080px;margin:0 auto;padding:16px 16px calc(84px + env(safe-area-inset-bottom,0px))}
+.view[hidden]{display:none!important}
+
+/* filters */
+.filters{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.search{display:flex;gap:8px}
+.search input,.search select{flex:1;min-width:0;height:40px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);
+  color:var(--fg);padding:0 12px;font:inherit;font-size:14px}
+.search select{flex:0 0 auto;max-width:42%}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.periods{display:flex;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface)}
+.periods button{flex:1;border:0;background:none;padding:7px 0;font-size:13px;cursor:pointer;font-family:var(--f-mono)}
+.periods button+button{border-left:1px solid var(--line)}
+.periods button[aria-pressed="true"]{background:var(--accent);color:#1A1206;font-weight:500}
+
+/* section heads */
+.sh{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:22px 0 10px}
+.sh h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:19px;letter-spacing:.04em;text-transform:uppercase}
+.sh span{font-size:12px;color:var(--muted);font-family:var(--f-mono)}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.kpi .v{font-family:var(--f-display);font-weight:700;font-size:32px;line-height:1;font-variant-numeric:tabular-nums}
+.kpi .l{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:6px}
+.kpi.hl{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.kpi.hl .l{color:var(--brand-ink);opacity:.8}
+.kpi.hl .v{color:var(--accent)}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.bars{display:flex;flex-direction:column;gap:9px}
+.bar{display:grid;grid-template-columns:minmax(0,9.5em) minmax(0,1fr) 2.2em;align-items:center;gap:10px;cursor:pointer;
+  border:0;background:none;padding:0;text-align:left;width:100%}
+.bar .n{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .t{height:10px;background:var(--surface-2);border-radius:5px;overflow:hidden}
+.bar .t i{display:block;height:100%;background:var(--brand);border-radius:5px}
+:root[data-theme="dark"] .bar .t i{background:var(--accent)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .bar .t i{background:var(--accent)}}
+.bar .c{font-family:var(--f-mono);font-size:12px;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.bar.zero .n{color:var(--muted)}
+
+.timeline{display:flex;align-items:flex-end;gap:6px;height:130px;padding-top:6px}
+.tcol{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px}
+.tcol i{display:block;width:100%;max-width:34px;background:var(--accent);border-radius:4px 4px 0 0;min-height:2px}
+.tcol b{font-family:var(--f-mono);font-size:11px;font-weight:500;font-variant-numeric:tabular-nums}
+.tcol span{font-family:var(--f-mono);font-size:10px;color:var(--muted);white-space:nowrap}
+
+.grid2{display:grid;grid-template-columns:minmax(0,1fr);gap:0 18px}
+@media (min-width:860px){.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* news cards */
+.month{font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  margin:18px 0 8px;display:flex;align-items:center;gap:10px}
+.month::after{content:"";flex:1;height:1px;background:var(--line)}
+.list{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;display:grid;
+  grid-template-columns:52px minmax(0,1fr);gap:12px}
+.date{text-align:center;border-right:1px solid var(--line);padding-right:10px}
+.date .d{font-family:var(--f-display);font-weight:700;font-size:26px;line-height:1}
+.date .m{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;color:var(--muted)}
+.date .a{font-family:var(--f-mono);font-size:10px;color:var(--accent)}
+.card h3{margin:0 0 4px;font-size:15px;font-weight:600;line-height:1.35;text-wrap:balance}
+.card p{margin:0 0 8px;color:var(--muted);font-size:14px}
+.meta{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.tag{font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--chip);white-space:nowrap}
+.tag.co{background:var(--brand);color:var(--brand-ink)}
+.tag.ty{background:none;border:1px solid var(--accent);color:var(--fg)}
+.src{margin-left:auto;font-size:12px;color:var(--muted);text-decoration:none;font-family:var(--f-mono);border-bottom:1px dotted var(--muted)}
+.src:hover{color:var(--accent)}
+
+/* tiles for service/company views */
+.tiles{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+@media (min-width:640px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;text-align:left;cursor:pointer;
+  display:flex;flex-direction:column;gap:6px;width:100%}
+.tile .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.tile .nm{font-family:var(--f-display);font-weight:600;font-size:18px;letter-spacing:.03em;text-transform:uppercase}
+.tile .ct{font-family:var(--f-mono);font-size:13px;color:var(--accent);font-weight:500}
+.tile .lt{font-size:13px;color:var(--muted);line-height:1.4}
+.tile.empty{opacity:.6}
+
+.empty-state{background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);padding:22px;text-align:center;color:var(--muted)}
+.empty-state h3{margin:0 0 6px;color:var(--fg);font-family:var(--f-display);font-size:20px;letter-spacing:.03em;text-transform:uppercase}
+.active-filter{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap}
+.active-filter button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:2px 10px;font-size:12px;cursor:pointer}
+
+/* tab bar */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);
+  padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+nav.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+.kbtn{text-align:left;cursor:pointer;font:inherit;color:inherit;width:100%}
+.kbtn:hover{border-color:var(--accent)}
+.pill{font-family:var(--f-mono);font-size:11px;padding:2px 8px;border-radius:999px;white-space:nowrap;font-weight:500}
+.pill.open{background:var(--good);color:#fff}
+.pill.closed{background:var(--surface-2);color:var(--muted)}
+.roles{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 8px}
+.roles span{font-size:11.5px;padding:1px 7px;border:1px solid var(--line);border-radius:4px;color:var(--fg)}
+.where{font-size:12.5px;color:var(--muted);margin:-4px 0 8px;font-family:var(--f-mono)}
+#typeChips .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#1A1206}
+nav.tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;cursor:pointer;
+  font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:500}
+nav.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
+nav.tabs button[aria-selected="true"]{color:var(--accent)}
+nav.tabs button[aria-selected="true"] svg{stroke:var(--accent)}
+.foot{font-size:12px;color:var(--muted);margin-top:26px;text-align:center}
+@media (prefers-reduced-motion:no-preference){.bar .t i,.tcol i{transition:width .4s ease,height .4s ease}}
+</style>
+
+<header class="appbar">
+  <div class="row">
+    <div class="mark" aria-hidden="true">AB</div>
+    <div class="brandtxt">
+      <h1>FM Pulse UAE</h1>
+      <small>Al Bonian FM · market intelligence</small>
+    </div>
+    <div class="upd"><span>Updated</span><b id="updated">—</b></div>
+  </div>
+</header>
+
+<main>
+  <section class="filters" aria-label="Filters">
+    <div class="search">
+      <input id="q" type="search" placeholder="Search headlines…" aria-label="Search headlines">
+      <select id="company" aria-label="Company"><option value="">All companies</option></select>
+    </div>
+    <div class="chips" id="svcChips" role="group" aria-label="Service"></div>
+    <div class="chips" id="typeChips" role="group" aria-label="News type"></div>
+    <div class="periods" id="periods" role="group" aria-label="Period">
+      <button data-p="7">7D</button><button data-p="30">30D</button><button data-p="90">90D</button><button data-p="365">1Y</button><button data-p="0">ALL</button>
+    </div>
+  </section>
+
+  <section class="view" id="v-dash">
+    <div class="kpis">
+      <div class="kpi hl"><div class="v" id="k-total">0</div><div class="l">News items</div></div>
+      <div class="kpi"><div class="v" id="k-week">0</div><div class="l">Last 7 days</div></div>
+      <div class="kpi"><div class="v" id="k-co">0</div><div class="l">Companies</div></div>
+      <div class="kpi"><div class="v" id="k-contracts">0</div><div class="l">Contract wins</div></div>
+      <button class="kpi kbtn" data-gotype="Management Change"><div class="v" id="k-mgmt">0</div><div class="l">Management changes</div></button>
+      <button class="kpi kbtn" data-gotype="Hiring"><div class="v" id="k-hire">0</div><div class="l">Hiring · <span id="k-open">0</span> open now</div></button>
+    </div>
+    <div class="grid2">
+      <div>
+        <div class="sh"><h2>By service</h2><span>tap to filter</span></div>
+        <div class="panel"><div class="bars" id="barSvc"></div></div>
+      </div>
+      <div>
+        <div class="sh"><h2>By company</h2><span>tap to filter</span></div>
+        <div class="panel"><div class="bars" id="barCo"></div></div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div>
+        <div class="sh"><h2>By month</h2><span id="tlNote">items per month</span></div>
+        <div class="panel"><div class="timeline" id="timeline"></div></div>
+      </div>
+      <div>
+        <div class="sh"><h2>By news type</h2><span>share of items</span></div>
+        <div class="panel"><div class="bars" id="barType"></div></div>
+      </div>
+    </div>
+    <div class="sh"><h2>People moves &amp; hiring</h2><span><a href="#ppl" class="src" data-go="ppl">see all</a></span></div>
+    <div class="list" id="peopleLatest"></div>
+    <div class="sh"><h2>Latest</h2><span><a href="#feed" class="src" data-go="feed">see all</a></span></div>
+    <div class="list" id="latest"></div>
+  </section>
+
+  <section class="view" id="v-feed" hidden>
+    <div id="feedFilter"></div>
+    <div id="feed"></div>
+  </section>
+
+  <section class="view" id="v-svc" hidden>
+    <div class="sh" style="margin-top:4px"><h2>News by service</h2><span id="svcNote"></span></div>
+    <div class="tiles" id="svcTiles"></div>
+  </section>
+
+  <section class="view" id="v-ppl" hidden>
+    <div class="sh" style="margin-top:4px"><h2>Hiring</h2><span id="hireNote"></span></div>
+    <div class="list" id="hireList"></div>
+    <div class="sh"><h2>Management changes</h2><span id="mgmtNote"></span></div>
+    <div class="list" id="mgmtList"></div>
+  </section>
+
+  <section class="view" id="v-co" hidden>
+    <div class="sh" style="margin-top:4px"><h2>News by company</h2><span id="coNote"></span></div>
+    <div class="tiles" id="coTiles"></div>
+  </section>
+
+  <p class="foot">Summaries are paraphrased from public sources; open the source link for the full story. Feed refreshed daily.</p>
+</main>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="in" role="tablist">
+    <button role="tab" data-tab="dash" aria-selected="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Dashboard</button>
+    <button role="tab" data-tab="feed" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>News</button>
+    <button role="tab" data-tab="svc" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L4 16.8V20h3.2l5.3-5.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg>Services</button>
+    <button role="tab" data-tab="ppl" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.6-3.4 3-5.4 6-5.4s5.4 2 6 5.4"/><path d="M16 4.8a3 3 0 0 1 0 6M18 14.6c1.7.6 2.7 2.4 3 5.4"/></svg>People</button>
+    <button role="tab" data-tab="co" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M4 21V7l6-3v17M10 21V9l10 3v9M3 21h18M7 10v.01M7 14v.01M14 14v.01M17 14v.01M14 17v.01M17 17v.01"/></svg>Companies</button>
+  </div>
+</nav>
+
+<script type="application/json" id="snapshot">{"lastUpdated": "2026-10-14", "items": [{"companies": ["Al Ghurair FM"], "date": "2026-10-13", "emirate": "Dubai", "roles": ["FM Engineer", "FM Supervisor", "Electrical Tech", "Mechanical Tech", "HVAC Tech", "Chiller Tech", "Plumbing Tech", "Multiskilled Tech", "ELV Tech", "CCTV Tech", "SCADA Operator", "BMS Operator", "Document Controller", "FM Coordinator", "STP Operator", "Driver", "Helper"], "services": ["HVAC", "Electrical", "Plumbing", "MEP", "Security"], "source": "DMC Education", "summary": "Walk-ins run 13–25 Oct, 10 AM–4 PM. They target 3–6 years' experience, ideally in UAE FM, and prefer immediate joiners.", "title": "Al Ghurair FM walk-in interviews for 17 roles", "type": "Hiring", "until": "2026-10-25", "url": "https://dmc-education.com/2026/10/13/uae-jobs-2026-al-ghurair-fm-walk-in-interview-17-immediate-hiring-vacancies-apply-now/", "where": "9th Street, Umm Ramool, Dubai", "id": "2026-10-13-al-ghurair-fm-walkin"}, {"companies": ["Farnek"], "date": "2026-10-07", "emirate": "Dubai", "services": ["HSE"], "source": "Zawya", "summary": "Farnek's application was approved for a two-year BSC membership, backing its people-first safety culture with site-level hazard, incident and corrective-action controls.", "title": "Farnek joins the British Safety Council", "type": "Partnership", "url": "https://www.zawya.com/en/press-release/companies-news/farneks-british-safety-council-membership-strengthens-corporate-safety-strategy-1536783", "id": "2026-10-07-farnek-bsc"}, {"companies": ["Imdaad"], "date": "2026-10-07", "emirate": "Dubai", "roles": ["HVAC Tech", "Electrical Tech", "Plumber", "Civil Tech", "BMS Operator"], "services": ["HVAC", "Electrical", "Plumbing", "MEP"], "source": "Dubai Vacancy", "summary": "One-day walk-in on Saturday 10 Oct, 10 AM–2 PM, for technical maintenance roles.", "title": "Imdaad walk-in for MEP technicians and BMS operators", "type": "Hiring", "until": "2026-10-10", "url": "https://www.dubaivacancy.ae/imdaad-careers/", "where": "Al Bayan Building, 3rd Floor, Dubai Investment Park 1", "id": "2026-10-07-imdaad-walkin"}, {"companies": [], "date": "2026-10-05", "emirate": "Dubai", "services": ["Energy & Sustainability"], "source": "FM Middle East", "summary": "FM Middle East feature on the sustainability and energy-performance pressure now landing on Dubai's existing building stock and the FM teams that run it.", "title": "Dubai's existing buildings face a new sustainability test", "type": "Insight", "url": "https://www.fm-middleeast.com/", "id": "2026-10-05-dubai-existing-buildings"}, {"companies": ["Al Fajer FM"], "date": "2026-10-03", "emirate": "Dubai", "roles": ["CCTV Operator"], "services": ["Security"], "source": "Private Jobs Vacancy", "summary": "Walk-ins on 5–6 Oct for male CCTV operators. Candidates need a valid SIRA certificate and at least a year of UAE experience.", "title": "Al Fajer FM hiring CCTV operators", "type": "Hiring", "until": "2026-10-06", "url": "https://www.privatejobsvacancy.com/2026/10/al-fajer-facilities-management.html", "where": "Al Quoz Industrial Area 3, Dubai", "id": "2026-10-03-al-fajer-fm-cctv"}, {"companies": [], "date": "2026-10-01", "emirate": "UAE", "services": ["HVAC"], "source": "FM Middle East", "summary": "Technical piece arguing that air-diffuser selection has an outsized effect on comfort and energy use in Gulf HVAC systems.", "title": "Why diffuser choice deserves more attention in Gulf buildings", "type": "Insight", "url": "https://www.fm-middleeast.com/", "id": "2026-10-01-diffuser-choice"}, {"companies": ["IFM"], "date": "2026-09-27", "emirate": "UAE", "roles": ["Soft Services Supervisor", "Team Leader", "Machine Operator", "MEWP Cleaner"], "services": ["Cleaning & Soft FM"], "source": "Private Jobs Vacancy", "summary": "Walk-in on 3 Oct for soft-services roles. It requires 3+ years of FM or GCC experience, with mall or airport experience preferred.", "title": "IFM recruits soft-services teams in Abu Dhabi and Dubai", "type": "Hiring", "until": "2026-10-03", "url": "https://www.privatejobsvacancy.com/2026/09/walk-in-interviews-ifm-facilities.html", "where": "Al Bustan Complex, Abu Dhabi · Business Avenue, Port Saeed, Dubai", "id": "2026-09-27-ifm-soft-services"}, {"companies": ["Emrill"], "date": "2026-09-23", "emirate": "Dubai", "services": ["Awards & Industry"], "source": "Emrill", "summary": "Emrill collected six awards at the MEFMA Awards of Excellence in FM 2026, adding to its EcoVadis Silver rating this year.", "title": "Emrill wins six accolades at MEFMA Awards 2026", "type": "Award", "url": "https://www.emrill.com/", "id": "2026-09-23-emrill-mefma"}, {"companies": ["MEFMA", "Farnek"], "date": "2026-09-17", "emirate": "Dubai", "services": ["Awards & Industry", "Energy & Sustainability", "Technology & AI"], "source": "TradeArabia", "summary": "The Dubai gala recognised 35 winners and highly commended entries across 16 categories; Farnek won Sustainable FM Practices and Digital Solutions, and HITEK AI won Innovative FM Solutions.", "title": "Fifth MEFMA Awards name a record 35 winners", "type": "Award", "url": "https://tradearabia.com/News/486495/MEFMA-celebrates-achievements-of-top-regional-FM-players", "id": "2026-09-17-mefma-awards"}, {"companies": ["Emrill"], "date": "2026-07-24", "emirate": "Dubai", "services": ["HSE"], "source": "Emrill", "summary": "Emrill teamed up with Dubai Police on a road-safety awareness initiative for its workforce.", "title": "Emrill partners with Dubai Police on road safety", "type": "Partnership", "url": "https://www.emrill.com/", "id": "2026-07-24-emrill-dubai-police"}, {"companies": ["Emrill"], "date": "2026-07-08", "emirate": "Dubai", "services": ["MEP"], "source": "Emrill", "summary": "A new central warehouse is set to tighten spares and materials logistics and speed up service delivery across Emrill's UAE contracts.", "title": "Emrill opens a new central warehouse", "type": "Operations", "url": "https://www.emrill.com/", "id": "2026-07-08-emrill-warehouse"}, {"companies": ["Emrill"], "date": "2026-06-30", "emirate": "Dubai", "services": ["MEP", "Plumbing", "Electrical", "HVAC", "Cleaning & Soft FM"], "source": "IndexBox", "summary": "Scope covers MEP, housekeeping, lifeguard and specialist services across 117 units, villa suites and resort amenities on Pearl Jumeirah.", "title": "Emrill wins four-year FM contract at Nikki Beach Resort Dubai", "type": "Contract", "url": "https://www.indexbox.io/blog/emrill-secures-four-year-facilities-management-contract-at-nikki-beach-resort-spa-dubai/", "id": "2026-06-30-emrill-nikki-beach"}, {"companies": ["Empower"], "date": "2026-05-14", "emirate": "Dubai", "services": ["HVAC", "Energy & Sustainability"], "source": "Dubai Media Office", "summary": "Empower highlighted plant and network expansion, including its 39,000 RT Deira Waterfront plant serving more than 46 buildings.", "title": "Empower keeps expanding Dubai's district cooling network", "type": "Expansion", "url": "https://mediaoffice.ae/en/news/2026/may/14-05/empower-continues-expanding-dubais-future-ready-district-cooling-infrastructure", "id": "2026-05-14-empower-expansion"}, {"companies": ["Farnek", "MEFMA"], "date": "2026-05-13", "emirate": "Dubai", "services": ["Awards & Industry", "Energy & Sustainability", "Waste Management"], "source": "MEFMA", "summary": "Farnek took Gold for Sustainable FM Practices, recognising its work on the Coldplay Abu Dhabi 2025 concert; Red Sea Global took Silver.", "title": "Farnek wins Gold at the Global FM Awards 2026", "type": "Award", "url": "https://mefma.org/2026/05/from-regional-excellence-to-global-recognition-mefma-members-shine-at-the-global-fm-awards-of-excellence-2026/", "id": "2026-05-13-farnek-global-fm"}, {"companies": ["Empower"], "date": "2026-05-07", "emirate": "Dubai", "services": ["HVAC"], "source": "Dubai Media Office", "summary": "Q1 brought 28 new contracts for 35,662 RT of district cooling, with a new ~44,000 RT plant due to start construction in Q4 2026.", "title": "Empower signs 28 cooling contracts in Q1 2026", "type": "Contract", "url": "https://mediaoffice.ae/en/news/2026/may/07-05/empower", "id": "2026-05-07-empower-q1"}, {"approx": true, "companies": ["Farnek"], "date": "2026-05-01", "emirate": "UAE", "services": ["MEP", "Cleaning & Soft FM"], "source": "MarkNtel Advisors", "summary": "New integrated FM contracts span education, transportation, commercial, residential and retail sectors.", "title": "Farnek secures about USD 15.8m in new IFM contracts", "type": "Contract", "url": "https://www.marknteladvisors.com/research-library/middle-east-facility-management-market.html", "id": "2026-05-01-farnek-contracts"}, {"companies": ["Emrill"], "date": "2026-04-23", "emirate": "Dubai", "services": ["Awards & Industry"], "source": "Emrill", "summary": "The former FAB graduate-resourcing head joins Emrill's executive team, with Emiratisation and FM careers for UAE nationals as her top priority.", "title": "Emrill appoints Khadija Alhirey as HR Director", "type": "Management Change", "url": "https://www.emrill.com/emrill-strengthens-executive-leadership-team-with-appointment-of-hr-director-to-advance-people-strategy-and-emiratisation/", "id": "2026-04-23-emrill-hr-director"}, {"approx": true, "companies": ["Farnek"], "date": "2026-04-01", "emirate": "Dubai", "services": ["Technology & AI", "MEP"], "source": "Real Estate Club Dubai", "summary": "Q1 2026 wins came with roughly 200 extra staff mobilised and an AI-powered asset-condition tool.", "title": "Farnek wins over AED 58m in Q1 contracts and launches HITEK AI tool", "type": "Contract", "url": "https://realestateclubdubai.com/blog/property-management/best-facilities-management-companies-dubai-2026", "id": "2026-04-01-farnek-q1-hitek"}, {"companies": ["Dubai Municipality"], "date": "2026-03-10", "emirate": "Dubai", "services": ["Regulation", "Fire & Life Safety", "MEP"], "source": "Al Tamimi", "summary": "All Dubai buildings, free zones included, now fall under Dubai Municipality oversight with mandatory periodic maintenance, a Quality and Safety Certificate and a digital building record.", "title": "Dubai Law No. 3 of 2026 on building quality and safety", "type": "Regulation", "url": "https://www.tamimi.com/news/dubai-enacts-comprehensive-new-framework-for-building-quality-and-safety-law-no-3-of-2026-on-the-quality-and-safety-of-buildings-in-the-emirate-of-dubai/", "id": "2026-03-10-dubai-law-3"}, {"companies": ["Idama", "Ejadah"], "date": "2025-10-16", "emirate": "Dubai", "services": ["Awards & Industry", "Security"], "source": "Built Environment ME", "summary": "The Dubai Holding subsidiary appointed Alex Davies to lead its roughly 20,000 staff across Idama Facilities Management, Arkan Security and Shabaka Services.", "title": "Alex Davies named CEO of Ejadah, parent of Idama", "type": "Management Change", "url": "https://www.builtenvironmentme.com/news/ifm/alex-davies-appointed-ceo-of-ejadah-part-of-dubai-holding", "id": "2025-10-16-ejadah-new-ceo"}]}</script>
+<script>
+const SERVICES=["HVAC","Plumbing","Electrical","MEP","Fire & Life Safety","Cleaning & Soft FM","Security","Energy & Sustainability","Waste Management","HSE","Technology & AI","Regulation","Awards & Industry"];
+const TYPES=["Contract","Management Change","Hiring","Award","Regulation","Expansion","Partnership","Operations","Results","Insight"];
+const TABS=["dash","feed","svc","ppl","co"];
+const state={items:[],meta:null,svc:"",co:"",type:"",q:"",period:0,tab:"dash",loaded:false,dbOk:true};
+const typeOf=n=>n.type==="Appointment"?"Management Change":(n.type||"Other");
+function isOpen(n){return typeOf(n)==="Hiring"&&n.until&&pd(n.until)>=today();}
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function today(){const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
+function pd(s){const [y,m,d]=String(s).split("-").map(Number);return new Date(y,(m||1)-1,d||1);}
+function ageDays(s){return Math.floor((today()-pd(s))/864e5);}
+
+function load(k,def){try{const v=localStorage.getItem(k);return v==null?def:JSON.parse(v);}catch(e){return def;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+Object.assign(state,load("fmpulse-ui",{}));
+state.loaded=false;
+let SNAP={};
+try{SNAP=JSON.parse(document.getElementById("snapshot").textContent||"{}")||{};}catch(e){SNAP={};}
+if(Array.isArray(SNAP.items)&&SNAP.items.length){state.items=SNAP.items;state.meta={lastUpdated:SNAP.lastUpdated};state.loaded=true;state.offline=true;}
+
+function filtered(opts={}){
+  const q=state.q.trim().toLowerCase();
+  return state.items.filter(n=>{
+    if(state.period && ageDays(n.date)>state.period) return false;
+    if(!opts.ignoreSvc && state.svc && !(n.services||[]).includes(state.svc)) return false;
+    if(!opts.ignoreCo && state.co && !(n.companies||[]).includes(state.co)) return false;
+    if(!opts.ignoreType && state.type && typeOf(n)!==state.type) return false;
+    if(q && !((n.title+" "+n.summary+" "+(n.type||"")+" "+(n.companies||[]).join(" ")).toLowerCase().includes(q))) return false;
+    return true;
+  }).sort((a,b)=>b.date.localeCompare(a.date));
+}
+function companies(){const s=new Set();state.items.forEach(n=>(n.companies||[]).forEach(c=>s.add(c)));return [...s].sort();}
+function count(list,key){const m=new Map();list.forEach(n=>(n[key]||[]).forEach(v=>m.set(v,(m.get(v)||0)+1)));return m;}
+
+function card(n){
+  const d=pd(n.date);
+  return `<article class="card">
+    <div class="date"><div class="d">${n.approx?"~":d.getDate()}</div><div class="m">${MON[d.getMonth()]} ${String(d.getFullYear()).slice(2)}</div>${n.emirate?`<div class="a">${esc(n.emirate)}</div>`:""}</div>
+    <div style="min-width:0">
+      <h3>${esc(n.title)}</h3>
+      ${typeOf(n)==="Hiring"&&n.until?`<div class="meta" style="margin-bottom:6px">${isOpen(n)?`<span class="pill open">Open until ${fmtDate(n.until)}</span>`:`<span class="pill closed">Closed ${fmtDate(n.until)}</span>`}</div>`:""}
+      <p>${esc(n.summary)}</p>
+      ${Array.isArray(n.roles)&&n.roles.length?`<div class="roles">${n.roles.map(r=>`<span>${esc(r)}</span>`).join("")}</div>`:""}
+      ${n.where?`<div class="where">Venue: ${esc(n.where)}</div>`:""}
+      <div class="meta">
+        ${(n.companies||[]).map(c=>`<span class="tag co">${esc(c)}</span>`).join("")}
+        <span class="tag ty">${esc(typeOf(n))}</span>
+        ${(n.services||[]).map(s=>`<span class="tag">${esc(s)}</span>`).join("")}
+        ${n.url?`<a class="src" href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.source||"source")} ↗</a>`:""}
+      </div>
+    </div></article>`;
+}
+function emptyBox(){
+  if(!state.dbOk) return `<div class="empty-state"><h3>Feed unavailable here</h3>Sign in to claude.ai and open this page from your artifacts to load the news feed.</div>`;
+  if(!state.loaded) return `<div class="empty-state"><h3>Loading news…</h3>Fetching the latest UAE facilities management stories.</div>`;
+  if(!state.items.length) return `<div class="empty-state"><h3>No news yet</h3>The daily update adds UAE FM stories here each morning.</div>`;
+  return `<div class="empty-state"><h3>No matches</h3>Nothing fits these filters. Try a longer period or clear the service and company filters.</div>`;
+}
+function bars(el,entries,onPick,active){
+  const max=Math.max(1,...entries.map(e=>e[1]));
+  el.innerHTML=entries.map(([k,v])=>`<button class="bar${v?"":" zero"}" data-k="${esc(k)}" aria-pressed="${active===k}">
+    <span class="n">${esc(k)}</span><span class="t"><i style="width:${(v/max*100).toFixed(1)}%"></i></span><span class="c">${v}</span></button>`).join("");
+  el.querySelectorAll(".bar").forEach(b=>b.onclick=()=>onPick(b.dataset.k));
+}
+
+function render(){
+  // controls
+  const cos=companies();
+  const sel=$("#company");const cur=state.co;
+  sel.innerHTML=`<option value="">All companies</option>`+cos.map(c=>`<option ${c===cur?"selected":""}>${esc(c)}</option>`).join("");
+  $("#svcChips").innerHTML=[["","All services"],...SERVICES.map(s=>[s,s])].map(([v,l])=>`<button class="chip" data-s="${esc(v)}" aria-pressed="${state.svc===v}">${esc(l)}</button>`).join("");
+  $("#svcChips").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{state.svc=b.dataset.s;persist();render();});
+  $("#typeChips").innerHTML=[["","All news types"],...TYPES.map(t=>[t,t])].map(([v,l])=>`<button class="chip" data-t="${esc(v)}" aria-pressed="${state.type===v}">${esc(l)}</button>`).join("");
+  $("#typeChips").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{state.type=b.dataset.t;persist();render();});
+  $("#periods").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.p===state.period)));
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===state.tab)));
+  TABS.forEach(t=>$("#v-"+t).hidden=t!==state.tab);
+
+  const list=filtered();
+  const m=state.meta;
+  $("#updated").textContent=m&&m.lastUpdated?fmtDate(m.lastUpdated):(state.items[0]?fmtDate([...state.items].sort((a,b)=>b.date.localeCompare(a.date))[0].date):"—");
+
+  // dashboard
+  $("#k-total").textContent=list.length;
+  $("#k-week").textContent=list.filter(n=>ageDays(n.date)<=7).length;
+  $("#k-co").textContent=new Set(list.flatMap(n=>n.companies||[])).size;
+  const lt=filtered({ignoreType:true});
+  $("#k-contracts").textContent=lt.filter(n=>typeOf(n)==="Contract").length;
+  $("#k-mgmt").textContent=lt.filter(n=>typeOf(n)==="Management Change").length;
+  $("#k-hire").textContent=lt.filter(n=>typeOf(n)==="Hiring").length;
+  $("#k-open").textContent=lt.filter(isOpen).length;
+  const ppl=lt.filter(n=>["Hiring","Management Change"].includes(typeOf(n)));
+  const pplSorted=[...ppl].sort((a,b)=>(isOpen(b)-isOpen(a))||b.date.localeCompare(a.date));
+  $("#peopleLatest").innerHTML=pplSorted.length?pplSorted.slice(0,3).map(card).join(""):`<div class="empty-state">No hiring or management news in this period.</div>`;
+  const hires=lt.filter(n=>typeOf(n)==="Hiring").sort((a,b)=>(isOpen(b)-isOpen(a))||b.date.localeCompare(a.date));
+  const mg=lt.filter(n=>typeOf(n)==="Management Change");
+  $("#hireNote").textContent=lt.filter(isOpen).length+" open · "+hires.length+" total";
+  $("#mgmtNote").textContent=mg.length+" items";
+  $("#hireList").innerHTML=hires.length?hires.map(card).join(""):`<div class="empty-state">No hiring announcements in this period.</div>`;
+  $("#mgmtList").innerHTML=mg.length?mg.map(card).join(""):`<div class="empty-state">No management changes in this period. Try 1Y or ALL.</div>`;
+  const svcCount=count(filtered({ignoreSvc:true}),"services");
+  bars($("#barSvc"),SERVICES.map(s=>[s,svcCount.get(s)||0]).sort((a,b)=>b[1]-a[1]),k=>{state.svc=state.svc===k?"":k;state.tab="feed";persist();render();},state.svc);
+  const coCount=count(filtered({ignoreCo:true}),"companies");
+  bars($("#barCo"),[...coCount].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).slice(0,10),k=>{state.co=state.co===k?"":k;state.tab="feed";persist();render();},state.co);
+  if(!coCount.size) $("#barCo").innerHTML=`<div class="tile lt" style="border:0;padding:0;color:var(--muted)">No companies in this view.</div>`;
+  const tc=new Map();lt.forEach(n=>tc.set(typeOf(n),(tc.get(typeOf(n))||0)+1));
+  bars($("#barType"),[...tc].sort((a,b)=>b[1]-a[1]),k=>{state.type=state.type===k?"":k;state.tab="feed";persist();render();},state.type);
+  if(!tc.size) $("#barType").innerHTML=`<div style="color:var(--muted);font-size:13px">No items in this view.</div>`;
+  // timeline: last 6 months ending this month
+  const t=today();const months=[];
+  for(let i=5;i>=0;i--){const d=new Date(t.getFullYear(),t.getMonth()-i,1);months.push([d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"),MON[d.getMonth()]]);}
+  const mc=new Map();list.forEach(n=>{const k=n.date.slice(0,7);mc.set(k,(mc.get(k)||0)+1);});
+  const mmax=Math.max(1,...months.map(([k])=>mc.get(k)||0));
+  $("#timeline").innerHTML=months.map(([k,l])=>{const v=mc.get(k)||0;return `<div class="tcol"><b>${v}</b><i style="height:${(v/mmax*80).toFixed(1)}%"></i><span>${l}</span></div>`;}).join("");
+  $("#latest").innerHTML=list.length?list.slice(0,4).map(card).join(""):emptyBox();
+
+  // feed
+  const af=[];
+  if(state.svc) af.push(`Service: <b>${esc(state.svc)}</b> <button data-clr="svc">clear</button>`);
+  if(state.co) af.push(`Company: <b>${esc(state.co)}</b> <button data-clr="co">clear</button>`);
+  if(state.type) af.push(`Type: <b>${esc(state.type)}</b> <button data-clr="type">clear</button>`);
+  $("#feedFilter").innerHTML=af.length?`<div class="active-filter">${af.join(" · ")}</div>`:"";
+  $("#feedFilter").querySelectorAll("[data-clr]").forEach(b=>b.onclick=()=>{state[b.dataset.clr]="";persist();render();});
+  if(!list.length) $("#feed").innerHTML=emptyBox();
+  else{
+    let html="",last="";
+    list.forEach(n=>{const d=pd(n.date);const k=MON[d.getMonth()]+" "+d.getFullYear();if(k!==last){html+=`<div class="month">${k}</div><div class="list">`;}
+      html+=card(n);last=k;const next=list[list.indexOf(n)+1];const nk=next?MON[pd(next.date).getMonth()]+" "+pd(next.date).getFullYear():"";if(nk!==k) html+="</div>";});
+    $("#feed").innerHTML=html;
+  }
+
+  // services view
+  const base=filtered({ignoreSvc:true});
+  $("#svcNote").textContent=base.length+" items in period";
+  $("#svcTiles").innerHTML=SERVICES.map(s=>{const its=base.filter(n=>(n.services||[]).includes(s));
+    return `<button class="tile${its.length?"":" empty"}" data-s="${esc(s)}"><div class="top"><span class="nm">${esc(s)}</span><span class="ct">${its.length}</span></div>
+    <div class="lt">${its.length?esc(its[0].title)+` · <span style="font-family:var(--f-mono)">${fmtDate(its[0].date)}</span>`:"No news in this period"}</div></button>`;}).join("");
+  $("#svcTiles").querySelectorAll(".tile").forEach(b=>b.onclick=()=>{state.svc=b.dataset.s;state.tab="feed";persist();render();scrollTo(0,0);});
+
+  // companies view
+  const cbase=filtered({ignoreCo:true});const cc=count(cbase,"companies");
+  $("#coNote").textContent=cc.size+" companies";
+  $("#coTiles").innerHTML=cc.size?[...cc].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).map(([c,v])=>{const its=cbase.filter(n=>(n.companies||[]).includes(c));
+    const svcs=[...count(its,"services")].sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]).join(" · ");
+    return `<button class="tile" data-c="${esc(c)}"><div class="top"><span class="nm">${esc(c)}</span><span class="ct">${v}</span></div>
+    <div class="lt">${esc(its[0].title)}</div><div class="lt" style="font-family:var(--f-mono);font-size:11.5px">${esc(svcs)}</div></button>`;}).join(""):emptyBox();
+  $("#coTiles").querySelectorAll(".tile[data-c]").forEach(b=>b.onclick=()=>{state.co=b.dataset.c;state.tab="feed";persist();render();scrollTo(0,0);});
+}
+function fmtDate(s){const d=pd(String(s).slice(0,10));return d.getDate()+" "+MON[d.getMonth()]+" "+d.getFullYear();}
+function persist(){save("fmpulse-ui",{svc:state.svc,co:state.co,type:state.type,period:state.period,tab:state.tab});}
+
+$("#company").onchange=e=>{state.co=e.target.value;persist();render();};
+let qt;$("#q").oninput=e=>{clearTimeout(qt);qt=setTimeout(()=>{state.q=e.target.value;render();},150);};
+$("#periods").querySelectorAll("button").forEach(b=>b.onclick=()=>{state.period=+b.dataset.p;persist();render();});
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{state.tab=b.dataset.tab;persist();render();scrollTo(0,0);});
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g){e.preventDefault();state.tab=g.dataset.go;persist();render();scrollTo(0,0);return;}
+  const k=e.target.closest("[data-gotype]");if(k){state.type=k.dataset.gotype;state.tab="ppl";persist();render();scrollTo(0,0);}});
+if(location.hash){const h=location.hash.slice(1);if(TABS.includes(h))state.tab=h;}
+if(!TABS.includes(state.tab))state.tab="dash";
+render();
+
+(async()=>{
+  let db=null;
+  try{db=window.claude&&window.claude.use?await window.claude.use("db"):null;}catch(e){db=null;}
+  if(!db){if(!state.items.length)state.dbOk=false;render();return;}
+  db.collection("news").orderBy("date","desc").limit(1000).onSnapshot(snap=>{
+    const live=snap.docs.map(d=>({id:d.id,...d.data()})).filter(n=>n.title&&n.date);
+    if(live.length||!state.items.length){state.items=live;state.offline=false;}
+    state.loaded=true;render();
+  },()=>{if(!state.items.length)state.dbOk=false;render();});
+  db.doc("meta/status").onSnapshot(s=>{if(s.exists)state.meta=s.data();render();},()=>{});
+})();
+</script>
+</body></html>
