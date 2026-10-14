@@ -483,7 +483,7 @@ if(!TABS.includes(state.tab))state.tab="dash";
 render();
 
 const ADDR="ananader1@gmail.com";
-const CONTACT_ENDPOINT="";
+const CONTACT_ENDPOINT="https://script.google.com/macros/s/AKfycbwBFJZhPcuVpO8DkL-MiBii3mi5FTwe594ATvLTnDxAC2xQOvryEHw7-TdJgcjjv8Fe/exec";
 function updMail(){$("#mailLink").href="mailto:"+ADDR+"?subject="+encodeURIComponent($("#cSubject").value||"FM Pulse UAE");}
 $("#cSubject").addEventListener("input",updMail);updMail();
 function selectAddr(){try{const r=document.createRange();r.selectNodeContents($("#addr"));const s=getSelection();s.removeAllRanges();s.addRange(r);}catch(e){}}
