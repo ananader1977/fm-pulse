@@ -240,7 +240,7 @@ nav.tabs button[aria-selected="true"] svg{stroke:var(--accent)}
       <div class="kpi hl"><div class="v" id="k-total">0</div><div class="l">News items</div></div>
       <div class="kpi"><div class="v" id="k-week">0</div><div class="l">Last 7 days</div></div>
       <div class="kpi"><div class="v" id="k-co">0</div><div class="l">Companies</div></div>
-      <button class="kpi kbtn" data-go="ctr"><div class="v" id="k-contracts">0</div><div class="l">Contract wins · <span id="k-renew">0</span> renewals ≤12 mo</div></button>
+      <button class="kpi kbtn" data-go="ctr"><div class="v" id="k-contracts">0</div><div class="l">Contract wins</div></button>
       <button class="kpi kbtn" data-gotype="Management Change"><div class="v" id="k-mgmt">0</div><div class="l">Management changes</div></button>
       <button class="kpi kbtn" data-gotype="Hiring"><div class="v" id="k-hire">0</div><div class="l">Hiring · <span id="k-open">0</span> open now</div></button>
     </div>
@@ -302,14 +302,7 @@ nav.tabs button[aria-selected="true"] svg{stroke:var(--accent)}
   <section class="view" id="v-ctr" hidden>
     <div class="sh" style="margin-top:4px"><h2>Key contracts by company</h2><span id="keyNote"></span></div>
     <div class="tiles" id="keyCo"></div>
-    <div class="subh">Upcoming renewals</div>
-    <p class="note" style="margin:0 0 8px">Estimated expiry = start or announcement date + stated contract length. Renewals are often not announced, so treat dates as a guide.</p>
-    <div class="list" id="ctrUpcoming"></div>
-    <div class="subh">Past estimated expiry · renewed or re-tendered?</div>
-    <div class="list" id="ctrPast"></div>
-    <div class="subh">Term not disclosed</div>
-    <div class="list" id="ctrNoDur"></div>
-    <div class="subh">Other contract news · no client named</div>
+    <div class="subh">Other contract news</div>
     <div class="list" id="ctrOther"></div>
   </section>
 
@@ -383,17 +376,10 @@ function roleGroup(r){for(const [re,l] of ROLE_MAP){if(re.test(r))return l;}retu
 const pad2=x=>String(x).padStart(2,"0");
 const ymd=d=>d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
 function ctrInfo(n){
-  const c=n.contract||{};const start=c.start||n.date;let exp=c.expiry||"";
-  if(!exp&&c.durationYears){const d=pd(start);const yrs=Math.floor(c.durationYears);const mos=Math.round((c.durationYears-yrs)*12);exp=ymd(new Date(d.getFullYear()+yrs,d.getMonth()+mos,d.getDate()));}
-  const months=exp?(pd(exp)-today())/(864e5*30.44):null;
-  const rep=n.approx?String(pd(n.date).getFullYear()):MON[pd(n.date).getMonth()]+" "+pd(n.date).getFullYear();
-  let cls="closed",label="Term not disclosed · reported "+rep;
-  if(months!==null){const mo=MON[pd(exp).getMonth()]+" "+pd(exp).getFullYear();
-    if(months<0){cls="due";label="Est. expired "+mo;}
-    else if(months<=12){cls="soon";label="Expires in "+Math.max(1,Math.round(months))+" mo · "+mo;}
-    else if(months<=24){cls="mid";label="Expires "+mo;}
-    else{cls="later";label="Expires "+mo;}}
-  return {c,start,exp,months,cls,label};
+  const c=n.contract||{};const start=c.start||n.date;
+  const yr=n.approx&&!c.start?String(pd(start).getFullYear()):MON[pd(start).getMonth()]+" "+pd(start).getFullYear();
+  const label=c.durationYears?c.durationYears+"-year contract · "+yr:(c.valueText?c.valueText+" · "+yr:"Reported "+yr);
+  return {c,start,cls:"closed",label};
 }
 const state={items:[],meta:null,svc:"",co:"",type:"",emirate:"",sector:"",q:"",period:0,tab:"dash",loaded:false,dbOk:true};
 const typeOf=n=>n.type==="Appointment"?"Management Change":(n.type||"Other");
@@ -449,31 +435,6 @@ function card(n){
       </div>
     </div></article>`;
 }
-function ctrCard(n){
-  const i=ctrInfo(n);const c=i.c;
-  const top=i.exp?`<div class="d" style="font-size:20px">${pd(i.exp).getFullYear()}</div><div class="m">${MON[pd(i.exp).getMonth()]}</div><div class="a">expiry</div>`:`<div class="d" style="font-size:20px">—</div><div class="m">expiry</div>`;
-  const row=(k,v)=>v?`<dt>${k}</dt><dd>${esc(v)}</dd>`:"";
-  return `<article class="card">
-    <div class="date">${top}</div>
-    <div style="min-width:0">
-      <h3>${esc(c.client||n.title)}</h3>
-      <div class="meta" style="margin-bottom:4px"><span class="pill ${i.cls}">${esc(i.label)}</span></div>
-      <dl class="ctr-grid">
-        ${row("Provider",(n.companies||[]).join(", "))}
-        ${row("Scope",c.scope)}
-        ${row("Location",c.location)}
-        ${row("Value",c.valueText)}
-        ${row("Duration",c.durationYears?c.durationYears+" years":"")}
-        ${row(!c.durationYears?"Reported":(c.startEstimated?"Announced":"Start"),n.approx&&!c.start?String(pd(n.date).getFullYear()):fmtDate(i.start))}
-        ${row("Est. expiry",i.exp?fmtDate(i.exp):"")}
-      </dl>
-      <div class="meta">
-        <span class="tag">${esc(SECTOR_LABEL(sectorOf(n)))}</span>
-        <span class="tag">${esc(emirateOf(n))}</span>
-        ${n.url?`<a class="src" href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.source||"source")} ↗</a>`:""}
-      </div>
-    </div></article>`;
-}
 function emptyBox(){
   if(!state.dbOk) return `<div class="empty-state"><h3>Feed unavailable here</h3>Sign in to claude.ai and open this page from your artifacts to load the news feed.</div>`;
   if(!state.loaded) return `<div class="empty-state"><h3>Loading news…</h3>Fetching the latest UAE facilities management stories.</div>`;
@@ -521,24 +482,15 @@ function render(){
   // contracts
   const call=filtered({ignorePeriod:true,ignoreType:true,includeArchive:true});
   const tracked=call.filter(n=>n.contract).map(n=>({n,i:ctrInfo(n)}));
-  const upcoming=tracked.filter(x=>x.i.months!==null&&x.i.months>=0).sort((a,b)=>a.i.months-b.i.months);
-  const past=tracked.filter(x=>x.i.months!==null&&x.i.months<0).sort((a,b)=>b.i.months-a.i.months);
-  const nodur=tracked.filter(x=>x.i.months===null);
-  const soon=upcoming.filter(x=>x.i.months<=12).length;
-  $("#k-renew").textContent=soon;
-  $("#ctrUpcoming").innerHTML=upcoming.length?upcoming.map(x=>ctrCard(x.n)).join(""):`<div class="empty-state">No upcoming renewals match these filters.</div>`;
-  $("#ctrNoDur").innerHTML=nodur.length?[...nodur].sort((a,b)=>b.n.date.localeCompare(a.n.date)).map(x=>ctrCard(x.n)).join(""):`<div class="empty-state">None match these filters.</div>`;
-  const rank=x=>x.i.months===null?1:(x.i.months>=0?0:2);
   const byCo=new Map();tracked.forEach(x=>(x.n.companies||[]).filter(c=>c!=="Ejadah").forEach(c=>{if(!byCo.has(c))byCo.set(c,[]);byCo.get(c).push(x);}));
   const coList=[...byCo].sort((a,b)=>b[1].length-a[1].length||a[0].localeCompare(b[0]));
   $("#keyNote").textContent=coList.length+" companies";
   $("#keyCo").innerHTML=coList.length?coList.map(([co,arr])=>{
-    const s=[...arr].sort((a,b)=>rank(a)-rank(b)||b.n.date.localeCompare(a.n.date));
+    const s=[...arr].sort((a,b)=>b.n.date.localeCompare(a.n.date));
     const li=s.slice(0,4).map(x=>`<li><b>${esc(x.i.c.client||x.n.title)}</b>${x.i.c.scope?` <span class="sc">· ${esc(x.i.c.scope)}</span>`:""}<span class="pill ${x.i.cls}">${esc(x.i.label)}</span></li>`).join("");
     const more=s.length>4?`<button class="more" data-kc="${esc(co)}">+${s.length-4} more · show all</button>`:"";
     return `<div class="keyco"><div class="top" style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span class="nm" style="font-family:var(--f-display);font-weight:600;font-size:18px;letter-spacing:.03em;text-transform:uppercase">${esc(co)}</span><span class="ct" style="font-family:var(--f-mono);font-size:13px;color:var(--accent)">${arr.length}</span></div><ul>${li}</ul>${more}</div>`;}).join(""):`<div class="empty-state">No contracts match these filters.</div>`;
   $("#keyCo").querySelectorAll("[data-kc]").forEach(b=>b.onclick=()=>{state.co=b.dataset.kc;persist();render();});
-  $("#ctrPast").innerHTML=past.length?past.map(x=>ctrCard(x.n)).join(""):`<div class="empty-state">None match these filters.</div>`;
   const other=call.filter(n=>!n.contract&&typeOf(n)==="Contract");
   $("#ctrOther").innerHTML=other.length?other.map(card).join(""):`<div class="empty-state">None match these filters.</div>`;
   // roles demand
