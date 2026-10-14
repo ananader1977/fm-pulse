@@ -38,15 +38,26 @@ class IconLinks(HTMLParser):
             if a["href"].lower().endswith(".svg"): size = -1  # Pillow can't rasterise SVG
             self.icons.append((size, a["href"]))
 
-def to_png(data):
+def to_png(data, min_side=48):
     im = Image.open(io.BytesIO(data))
-    if getattr(im, "n_frames", 1) > 1 and im.format == "ICO":
-        im = max((im.ico.getimage(s) for s in im.ico.sizes()), key=lambda x: x.size[0])
+    if im.format == "ICO":
+        try:
+            im = max((im.ico.getimage(s) for s in im.ico.sizes()), key=lambda x: x.size[0])
+        except Exception:
+            pass
     im = im.convert("RGBA")
-    if min(im.size) < 48:
+    bbox = im.getbbox()
+    if bbox:
+        im = im.crop(bbox)
+    if min(im.size) < min_side:
         raise ValueError(f"too small {im.size}")
-    im.thumbnail((256, 256), Image.LANCZOS)
-    canvas = Image.new("RGBA", (256, 256), (0, 0, 0, 0))
+    # scale to fill 220px box (upscale small icons too)
+    scale = 220 / max(im.size)
+    im = im.resize((max(1, round(im.size[0] * scale)), max(1, round(im.size[1] * scale))), Image.LANCZOS)
+    # white-on-transparent logos get a navy tile so they stay visible
+    px = [p for p in im.getdata() if p[3] > 128]
+    light = px and sum((p[0] + p[1] + p[2]) / 3 for p in px) / len(px) > 225
+    canvas = Image.new("RGBA", (256, 256), (32, 42, 72, 255) if light else (0, 0, 0, 0))
     canvas.paste(im, ((256 - im.size[0]) // 2, (256 - im.size[1]) // 2), im)
     buf = io.BytesIO(); canvas.save(buf, "PNG", optimize=True)
     return buf.getvalue(), im.size
@@ -65,6 +76,8 @@ def candidates(domain):
         except Exception as e:
             print(f"  homepage {base}: {e}")
     urls.append(f"https://www.google.com/s2/favicons?domain={domain}&sz=256")
+    urls.append(f"https://icons.duckduckgo.com/ip3/{domain}.ico")
+    urls.append(f"https://www.google.com/s2/favicons?domain=www.{domain}&sz=128")
     return urls
 
 def main():
@@ -76,7 +89,8 @@ def main():
         for url in candidates(domain):
             try:
                 data, _ = get(url)
-                png, size = to_png(data)
+                fallback = "google.com/s2" in url or "duckduckgo" in url
+                png, size = to_png(data, 32 if fallback else 48)
                 open(os.path.join(OUT, slug(name) + ".png"), "wb").write(png)
                 manifest[name] = {"file": f"logos/{slug(name)}.png", "source": url, "size": list(size)}
                 print(f"  OK {size} <- {url}")
@@ -85,6 +99,10 @@ def main():
                 print(f"  skip {url}: {e}")
         else:
             print("  NO LOGO")
+    keep = {slug(n) + ".png" for n in companies}
+    for f in os.listdir(OUT):
+        if f.endswith(".png") and f not in keep:
+            os.remove(os.path.join(OUT, f))
     json.dump(manifest, open(os.path.join(OUT, "manifest.json"), "w"), indent=2, sort_keys=True)
     print(f"\n{len(manifest)}/{len(companies)} logos saved")
 
