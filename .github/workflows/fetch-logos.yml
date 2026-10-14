@@ -1,0 +1,33 @@
+name: Collect company logos
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "tools/companies.json"
+      - "tools/fetch_logos.py"
+      - ".github/workflows/fetch-logos.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  logos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow
+      - run: python tools/fetch_logos.py
+      - name: Commit logos
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add logos
+          if git diff --cached --quiet; then echo "No logo changes"; exit 0; fi
+          git commit -m "Update company logos"
+          git pull --rebase origin main
+          git push
