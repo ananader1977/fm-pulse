@@ -300,16 +300,10 @@ nav.tabs button[aria-selected="true"] svg{stroke:var(--accent)}
   </section>
 
   <section class="view" id="v-ctr" hidden>
-    <div class="sh" style="margin-top:4px"><h2>Contracts &amp; renewals</h2><span id="ctrNote"></span></div>
-    <div class="kpis kpis3">
-      <div class="kpi hl"><div class="v" id="c-total">0</div><div class="l">Contracts tracked</div></div>
-      <div class="kpi"><div class="v" id="c-soon">0</div><div class="l">Expiring ≤12 months</div></div>
-      <div class="kpi"><div class="v" id="c-passed">0</div><div class="l">Past est. expiry</div></div>
-    </div>
-    <p class="note">Estimated expiry = start date (or announcement date) + the stated contract length. Extensions and renewals are often not announced, so treat these dates as a guide to likely re-tender timing. The period filter doesn't apply here; company, emirate, sector, service and search do.</p>
-    <div class="sh"><h2>Key contracts by company</h2><span id="keyNote"></span></div>
+    <div class="sh" style="margin-top:4px"><h2>Key contracts by company</h2><span id="keyNote"></span></div>
     <div class="tiles" id="keyCo"></div>
     <div class="subh">Upcoming renewals</div>
+    <p class="note" style="margin:0 0 8px">Estimated expiry = start or announcement date + stated contract length. Renewals are often not announced, so treat dates as a guide.</p>
     <div class="list" id="ctrUpcoming"></div>
     <div class="subh">Past estimated expiry · renewed or re-tendered?</div>
     <div class="list" id="ctrPast"></div>
@@ -532,8 +526,6 @@ function render(){
   const nodur=tracked.filter(x=>x.i.months===null);
   const soon=upcoming.filter(x=>x.i.months<=12).length;
   $("#k-renew").textContent=soon;
-  $("#c-total").textContent=tracked.length;$("#c-soon").textContent=soon;$("#c-passed").textContent=past.length;
-  $("#ctrNote").textContent=tracked.length+" with client details";
   $("#ctrUpcoming").innerHTML=upcoming.length?upcoming.map(x=>ctrCard(x.n)).join(""):`<div class="empty-state">No upcoming renewals match these filters.</div>`;
   $("#ctrNoDur").innerHTML=nodur.length?[...nodur].sort((a,b)=>b.n.date.localeCompare(a.n.date)).map(x=>ctrCard(x.n)).join(""):`<div class="empty-state">None match these filters.</div>`;
   const rank=x=>x.i.months===null?1:(x.i.months>=0?0:2);
