@@ -141,7 +141,7 @@ main{max-width:1080px;margin:0 auto;padding:16px 16px calc(84px + env(safe-area-
 /* tab bar */
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);
   padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
-nav.tabs .in{max-width:620px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr)}
+nav.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
 .kbtn{text-align:left;cursor:pointer;font:inherit;color:inherit;width:100%}
 .kbtn:hover{border-color:var(--accent)}
 .pill{font-family:var(--f-mono);font-size:11px;padding:2px 8px;border-radius:999px;white-space:nowrap;font-weight:500}
@@ -198,7 +198,7 @@ nav.tabs .in{max-width:620px;margin:0 auto;display:grid;grid-template-columns:re
 .foot a{color:var(--muted)}
 #svcChips .chip[aria-pressed="true"],#typeChips .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 nav.tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;cursor:pointer;
-  font-size:clamp(8.5px,2.5vw,10.5px);letter-spacing:0;text-transform:uppercase;color:var(--muted);font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  font-size:clamp(9.5px,2.8vw,11px);letter-spacing:.02em;text-transform:uppercase;color:var(--muted);font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 nav.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
 nav.tabs button[aria-selected="true"]{color:var(--accent)}
 nav.tabs button[aria-selected="true"] svg{stroke:var(--accent)}
@@ -354,7 +354,6 @@ nav.tabs button[aria-selected="true"] svg{stroke:var(--accent)}
 <nav class="tabs" aria-label="Sections">
   <div class="in" role="tablist">
     <button role="tab" data-tab="dash" aria-selected="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Dashboard</button>
-    <button role="tab" data-tab="feed" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>News</button>
     <button role="tab" data-tab="svc" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L4 16.8V20h3.2l5.3-5.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg>Services</button>
     <button role="tab" data-tab="ppl" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.6-3.4 3-5.4 6-5.4s5.4 2 6 5.4"/><path d="M16 4.8a3 3 0 0 1 0 6M18 14.6c1.7.6 2.7 2.4 3 5.4"/></svg>People</button>
     <button role="tab" data-tab="ctr" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h3"/></svg>Contracts</button>
@@ -461,7 +460,7 @@ function render(){
   $("#typeChips").innerHTML=[["","All news types"],...TYPES.map(t=>[t,t])].map(([v,l])=>`<button class="chip" data-t="${esc(v)}" aria-pressed="${state.type===v}">${esc(l)}</button>`).join("");
   $("#typeChips").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{state.type=b.dataset.t;persist();render();});
   $("#periods").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.p===state.period)));
-  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===state.tab)));
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===(state.tab==="feed"?"dash":state.tab))));
   TABS.forEach(t=>$("#v-"+t).hidden=t!==state.tab);
   $(".filters").hidden=state.tab==="contact";
   if(state.tab==="contact")$("#contactBtn").setAttribute("aria-current","page");else $("#contactBtn").removeAttribute("aria-current");
