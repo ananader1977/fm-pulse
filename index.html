@@ -407,9 +407,9 @@ function photoHTML(n){
 }
 function fbHTML(n){
   const t=typeOf(n);const svc=(n.services||[]).find(s=>SVC_ICON[s])||"";
-  const icon=SVC_ICON[svc]||TYPE_ICON[t]||SVC_ICON["Awards & Industry"];
-  const label=svc||t;
-  const sub=n.emirate&&n.emirate!=="UAE"?n.emirate:"UAE";
+  const icon=TYPE_ICON[t]||SVC_ICON[svc]||SVC_ICON["Awards & Industry"];
+  const label=t==="Hiring"||t==="Management Change"?t:(svc||t);
+  const sub=[t!==label?t:"",n.emirate&&n.emirate!=="UAE"?n.emirate:"UAE"].filter(Boolean).join(" · ");
   return `<div class="ph fb" aria-hidden="true"><svg viewBox="0 0 24 24">${icon}</svg><div class="t">${esc(label)}<small>${esc(sub)}</small></div></div>`;
 }
 window.__fb=id=>{const n=state.items.find(x=>x.id===id);return n?fbHTML(n):"";};
@@ -573,7 +573,7 @@ function render(){
   const mc=new Map();list.forEach(n=>{const k=n.date.slice(0,7);mc.set(k,(mc.get(k)||0)+1);});
   const mmax=Math.max(1,...months.map(([k])=>mc.get(k)||0));
   $("#timeline").innerHTML=months.map(([k,l])=>{const v=mc.get(k)||0;return `<div class="tcol"><b>${v}</b><i style="height:${(v/mmax*80).toFixed(1)}%"></i><span>${l}</span></div>`;}).join("");
-  $("#latest").innerHTML=list.length?list.slice(0,4).map(card).join(""):emptyBox();
+  {const top=list.filter(n=>typeOf(n)!=="Hiring");$("#latest").innerHTML=top.length?top.slice(0,4).map(card).join(""):emptyBox();}
 
   // feed
   const af=[];
