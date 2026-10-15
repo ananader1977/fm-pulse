@@ -29,6 +29,11 @@ class Meta(HTMLParser):
         if key in ("og:image", "og:image:secure_url", "twitter:image", "twitter:image:src") and a.get("content"):
             self.found.setdefault(key, a["content"].strip())
 
+BAD = ("logo", "favicon", "placeholder", "default-og", "static.tradingview.com", "share-default")
+def generic(img):
+    low = img.lower()
+    return any(b in low for b in BAD)
+
 def snapshot():
     html = open(os.path.join(ROOT, "index.html"), encoding="utf-8").read()
     m = re.search(r'<script type="application/json" id="snapshot">(.*?)</script>', html, re.S)
@@ -47,7 +52,7 @@ def main():
         if n.get("type") == "Hiring": continue
         path = urllib.parse.urlparse(url).path
         if path in ("", "/") or path.rstrip("/").count("/") < 1 and len(path) < 3: continue
-        if nid in old:                      # keep earlier finds; don't re-fetch daily
+        if nid in old and not generic(old[nid].get("img", "")):   # keep earlier finds; don't re-fetch daily
             result[nid] = old[nid]; continue
         if url in cache:
             if cache[url]: result[nid] = cache[url]
@@ -60,6 +65,7 @@ def main():
             if not img: print(f"- {nid}: no preview image"); continue
             img = urllib.parse.urljoin(final, img)
             if not img.startswith("https://"): print(f"- {nid}: not https"); continue
+            if generic(img): print(f"- {nid}: generic site image"); continue
             data, _, ctype = get(img, 4_000_000)
             w, h = Image.open(io.BytesIO(data)).size
             if w < 400 or h < 180 or w / h > 3.2 or h / w > 1.6:
