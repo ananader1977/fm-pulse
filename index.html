@@ -366,7 +366,7 @@ nav.tabs button[aria-selected="true"] svg{stroke:var(--accent)}
 
   <section class="view" id="v-co" hidden>
     <div class="sh" style="margin-top:4px"><h2>News by company</h2><span id="coNote"></span></div>
-    <p class="note" style="margin:-4px 0 10px">Sorted by number of staff. The second figure is the latest published contract value; where none is published, revenue is shown instead and labelled. Empower and Tabreed are district-cooling utilities. Tap and hold a figure for its source.</p>
+    <p class="note" style="margin:-4px 0 10px">Sorted by number of staff. Revenue is shown only where the company has published it; most UAE FM companies are private and don't. Empower and Tabreed are district-cooling utilities. Tap and hold a figure for its source.</p>
     <div class="tiles" id="coTiles"></div>
   </section>
 
@@ -623,16 +623,16 @@ function render(){
 }
 const CO_FACTS={
  "Transguard":{val:"AED 3.86bn",valL:"Revenue",valY:"FY25/26",staff:78500,staffT:"~78,500",src:"Transguard Group FY25/26 results"},
- "EFS":{val:"AED 8bn",valL:"Contract backlog",valY:"mid-2024",staff:35000,staffT:"up to 35,000",src:"EFS H1 2024 results; REM Times Power 30 FM 2026 (group-wide staff)"},
+ "EFS":{staff:35000,staffT:"up to 35,000",src:"REM Times Power 30 FM 2026 (group-wide staff)"},
  "Ejadah":{staff:20000,staffT:"20,000+",src:"REM Times Power 30 FM, 2026"},
  "DULSCO":{staff:14000,staffT:"~14,000",src:"ACCA AB magazine, 2023"},
- "Farnek":{val:"AED 690m",valL:"Contracts won",valY:"2024",staff:12000,staffT:"12,000+",src:"Farnek: new and retained contracts 2024; Q1 2026 update"},
+ "Farnek":{staff:12000,staffT:"12,000+",src:"Farnek Q1 2026 update"},
  "Emrill":{staff:12000,staffT:"12,000+",src:"REM Times Power 30 FM, 2026"},
  "Berkeley":{staff:10000,staffT:"10,000+",src:"Gulf News (sponsored), Oct 2026"},
  "Imdaad":{val:"AED 1bn+",valL:"Revenue",valY:"2024",staff:9000,staffT:"9,000+",src:"Imdaad 2024 results; imdaad.ae"},
  "Khidmah":{staff:7000,staffT:"~7,000",src:"khidmah.com"},
  "Enova":{staff:5000,staffT:"5,000+",src:"REM Times Power 30 FM, 2026"},
- "ServeU":{val:"AED 270m",valL:"New contracts",valY:"2022",staff:5000,staffT:"5,000+",src:"ServeU 2022 contracts; REM Times Power 30 FM 2026"},
+ "ServeU":{staff:5000,staffT:"5,000+",src:"REM Times Power 30 FM, 2026"},
  "Al Fajer FM":{staff:3000,staffT:"3,000+",src:"REM Times Power 30 FM, 2026"},
  "Ontegra":{staff:2000,staffT:"2,000+",src:"REM Times Power 30 FM, 2026"},
  "Empower":{val:"AED 3.42bn",valL:"Revenue",valY:"2025",src:"Empower 2025 results (district cooling)"},
@@ -642,7 +642,7 @@ const NON_FM=new Set(["MEFMA","DEWA","Dubai Municipality","Abu Dhabi DoE","Dubai
 function coRank(a,b){const fa=CO_FACTS[a[0]]||{},fb=CO_FACTS[b[0]]||{};const na=NON_FM.has(a[0])?1:0,nb=NON_FM.has(b[0])?1:0;
   return na-nb||(fb.staff||0)-(fa.staff||0)||(fb.val?1:0)-(fa.val?1:0)||b[1]-a[1]||a[0].localeCompare(b[0]);}
 function factsHTML(c){if(NON_FM.has(c))return "";const f=CO_FACTS[c]||{};
-  return `<div class="cofacts" title="${esc(f.src?"Source: "+f.src:"No public figures found")}"><span><i>Staff</i><b>${f.staffT?esc(f.staffT):"Not disclosed"}</b></span><span><i>${esc(f.valL||"Contract value")}</i><b>${f.val?esc(f.val):"Not disclosed"}</b>${f.valY?`<small>${esc(f.valY)}</small>`:""}</span></div>`;}
+  return `<div class="cofacts" title="${esc(f.src?"Source: "+f.src:"No public figures found")}"><span><i>Staff</i><b>${f.staffT?esc(f.staffT):"Not disclosed"}</b></span><span><i>Revenue</i><b>${f.val?esc(f.val):"Not disclosed"}</b>${f.valY?`<small>${esc(f.valY)}</small>`:""}</span></div>`;}
 function fmtDate(s){const d=pd(String(s).slice(0,10));return d.getDate()+" "+MON[d.getMonth()]+" "+d.getFullYear();}
 function persist(){save("fmpulse-ui",{svc:state.svc,co:state.co,type:state.type,emirate:state.emirate,sector:state.sector,period:state.period,tab:state.tab});}
 
