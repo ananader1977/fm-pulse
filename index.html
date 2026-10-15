@@ -250,7 +250,7 @@ nav.tabs button[aria-selected="true"] svg{stroke:var(--accent)}
   </section>
 
   <section class="view" id="v-dash">
-    <div class="kpis">
+    <div class="kpis dtop">
       <div class="kpi hl"><div class="v" id="k-total">0</div><div class="l">News items</div></div>
       <div class="kpi"><div class="v" id="k-week">0</div><div class="l">Last 7 days</div></div>
       <div class="kpi"><div class="v" id="k-co">0</div><div class="l">Companies</div></div>
@@ -258,7 +258,7 @@ nav.tabs button[aria-selected="true"] svg{stroke:var(--accent)}
       <button class="kpi kbtn" data-gotype="Management Change"><div class="v" id="k-mgmt">0</div><div class="l">Management changes</div></button>
       <button class="kpi kbtn" data-gotype="Hiring"><div class="v" id="k-hire">0</div><div class="l">Hiring · <span id="k-open">0</span> open now</div></button>
     </div>
-    <div class="grid2">
+    <div class="grid2 dtop">
       <div>
         <div class="sh"><h2>By service</h2><span>tap to filter</span></div>
         <div class="panel"><div class="bars" id="barSvc"></div></div>
@@ -268,7 +268,7 @@ nav.tabs button[aria-selected="true"] svg{stroke:var(--accent)}
         <div class="panel"><div class="bars" id="barCo"></div></div>
       </div>
     </div>
-    <div class="grid2">
+    <div class="grid2 dtop">
       <div>
         <div class="sh"><h2>By month</h2><span id="tlNote">items per month</span></div>
         <div class="panel"><div class="timeline" id="timeline"></div></div>
@@ -278,7 +278,7 @@ nav.tabs button[aria-selected="true"] svg{stroke:var(--accent)}
         <div class="panel"><div class="bars" id="barType"></div></div>
       </div>
     </div>
-    <div class="grid2">
+    <div class="grid2 dtop">
       <div>
         <div class="sh"><h2>Most-demanded roles</h2><span>hiring drives</span></div>
         <div class="panel"><div class="bars" id="barRoles"></div></div>
@@ -288,9 +288,9 @@ nav.tabs button[aria-selected="true"] svg{stroke:var(--accent)}
         <div class="panel"><div class="bars" id="barSector"></div></div>
       </div>
     </div>
-    <div class="sh"><h2>People moves &amp; hiring</h2><span><a href="#ppl" class="src" data-go="ppl">see all</a></span></div>
-    <div class="list" id="peopleLatest"></div>
-    <div class="sh"><h2>Latest</h2><span><a href="#feed" class="src" data-go="feed">see all</a></span></div>
+    <div class="sh dtop"><h2>People moves &amp; hiring</h2><span><a href="#ppl" class="src" data-go="ppl">see all</a></span></div>
+    <div class="list dtop" id="peopleLatest"></div>
+    <div class="sh"><h2 id="latestH">Latest</h2><span><a href="#feed" class="src" data-go="feed">see all</a></span></div>
     <div class="list" id="latest"></div>
   </section>
 
@@ -573,7 +573,11 @@ function render(){
   const mc=new Map();list.forEach(n=>{const k=n.date.slice(0,7);mc.set(k,(mc.get(k)||0)+1);});
   const mmax=Math.max(1,...months.map(([k])=>mc.get(k)||0));
   $("#timeline").innerHTML=months.map(([k,l])=>{const v=mc.get(k)||0;return `<div class="tcol"><b>${v}</b><i style="height:${(v/mmax*80).toFixed(1)}%"></i><span>${l}</span></div>`;}).join("");
-  {const top=list.filter(n=>typeOf(n)!=="Hiring");$("#latest").innerHTML=top.length?top.slice(0,4).map(card).join(""):emptyBox();}
+  {const fa=!!(state.svc||state.co||state.type||state.emirate||state.sector||(state.q||"").trim()||state.period);
+   document.querySelectorAll("#v-dash .dtop").forEach(e=>e.hidden=fa);
+   $("#latestH").textContent=fa?`Matching news · ${list.length}`:"Latest";
+   const top=fa?list:list.filter(n=>typeOf(n)!=="Hiring");
+   $("#latest").innerHTML=top.length?(fa?top:top.slice(0,4)).map(card).join(""):emptyBox();}
 
   // feed
   const af=[];
