@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.cofacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:2px 0}.cofacts span{background:var(--surface-2);border-radius:8px;padding:6px 9px;min-width:0}.cofacts i{display:block;font-style:normal;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.cofacts b{font-family:var(--f-display);font-size:17px;font-weight:700;letter-spacing:.02em}.cofacts small{margin-left:6px;font-family:var(--f-mono);font-size:10.5px;color:var(--muted)}
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.cofacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:2px 0}.cofacts span{background:var(--surface-2);border-radius:8px;padding:6px 9px;min-width:0}.cofacts i{display:block;font-style:normal;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.cofacts b{font-family:var(--f-display);font-size:17px;font-weight:700;letter-spacing:.02em;white-space:nowrap}.cofacts small{display:block;font-family:var(--f-mono);font-size:10.5px;color:var(--muted)}
 </style></head><body>
 <title>FM Pulse UAE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -366,7 +366,7 @@ nav.tabs button[aria-selected="true"] svg{stroke:var(--accent)}
 
   <section class="view" id="v-co" hidden>
     <div class="sh" style="margin-top:4px"><h2>News by company</h2><span id="coNote"></span></div>
-    <p class="note" style="margin:-4px 0 10px">Sorted by latest reported revenue, then staff. Most FM companies are private and don't publish revenue; those are ranked by staff numbers. Empower and Tabreed are district-cooling utilities. Tap and hold a figure for its source.</p>
+    <p class="note" style="margin:-4px 0 10px">Sorted by number of staff. The second figure is the latest published contract value; where none is published, revenue is shown instead and labelled. Empower and Tabreed are district-cooling utilities. Tap and hold a figure for its source.</p>
     <div class="tiles" id="coTiles"></div>
   </section>
 
@@ -614,7 +614,7 @@ function render(){
 
   // companies view
   const cbase=filtered({ignoreCo:true});const cc=count(cbase,"companies");
-  $("#coNote").textContent=cc.size+" companies · by revenue";
+  $("#coNote").textContent=cc.size+" companies · by staff";
   $("#coTiles").innerHTML=cc.size?[...cc].sort(coRank).map(([c,v])=>{const its=cbase.filter(n=>(n.companies||[]).includes(c));
     const svcs=[...count(its,"services")].sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]).join(" · ");
     return `<button class="tile" data-c="${esc(c)}"><div class="top"><span class="who">${logoHTML(c,36)}<span class="nm">${esc(c)}</span></span><span class="ct">${v}</span></div>
@@ -622,27 +622,27 @@ function render(){
   $("#coTiles").querySelectorAll(".tile[data-c]").forEach(b=>b.onclick=()=>{state.co=b.dataset.c;state.tab="feed";persist();render();scrollTo(0,0);});
 }
 const CO_FACTS={
- "Transguard":{rev:3.86e9,revT:"AED 3.86bn",revY:"FY25/26",staff:78500,staffT:"~78,500",src:"Transguard Group results, 2026"},
- "Empower":{rev:3.42e9,revT:"AED 3.42bn",revY:"2025",src:"Empower 2025 results (district cooling)"},
- "Tabreed":{rev:2.46e9,revT:"AED 2.46bn",revY:"2025",src:"Tabreed FY2025 results (district cooling)"},
- "Imdaad":{rev:1e9,revT:"AED 1bn+",revY:"2024",staff:9000,staffT:"9,000+",src:"Imdaad press release 2025; imdaad.ae"},
- "EFS":{staff:35000,staffT:"up to 35,000 (group)",src:"REM Times Power 30 FM, 2026"},
+ "Transguard":{val:"AED 3.86bn",valL:"Revenue",valY:"FY25/26",staff:78500,staffT:"~78,500",src:"Transguard Group FY25/26 results"},
+ "EFS":{val:"AED 8bn",valL:"Contract backlog",valY:"mid-2024",staff:35000,staffT:"up to 35,000",src:"EFS H1 2024 results; REM Times Power 30 FM 2026 (group-wide staff)"},
  "Ejadah":{staff:20000,staffT:"20,000+",src:"REM Times Power 30 FM, 2026"},
  "DULSCO":{staff:14000,staffT:"~14,000",src:"ACCA AB magazine, 2023"},
+ "Farnek":{val:"AED 690m",valL:"Contracts won",valY:"2024",staff:12000,staffT:"12,000+",src:"Farnek: new and retained contracts 2024; Q1 2026 update"},
  "Emrill":{staff:12000,staffT:"12,000+",src:"REM Times Power 30 FM, 2026"},
- "Farnek":{staff:12000,staffT:"12,000+",src:"Farnek Q1 2026 update"},
  "Berkeley":{staff:10000,staffT:"10,000+",src:"Gulf News (sponsored), Oct 2026"},
+ "Imdaad":{val:"AED 1bn+",valL:"Revenue",valY:"2024",staff:9000,staffT:"9,000+",src:"Imdaad 2024 results; imdaad.ae"},
  "Khidmah":{staff:7000,staffT:"~7,000",src:"khidmah.com"},
  "Enova":{staff:5000,staffT:"5,000+",src:"REM Times Power 30 FM, 2026"},
- "ServeU":{staff:5000,staffT:"5,000+",src:"REM Times Power 30 FM, 2026"},
+ "ServeU":{val:"AED 270m",valL:"New contracts",valY:"2022",staff:5000,staffT:"5,000+",src:"ServeU 2022 contracts; REM Times Power 30 FM 2026"},
  "Al Fajer FM":{staff:3000,staffT:"3,000+",src:"REM Times Power 30 FM, 2026"},
- "Ontegra":{staff:2000,staffT:"2,000+",src:"REM Times Power 30 FM, 2026"}
+ "Ontegra":{staff:2000,staffT:"2,000+",src:"REM Times Power 30 FM, 2026"},
+ "Empower":{val:"AED 3.42bn",valL:"Revenue",valY:"2025",src:"Empower 2025 results (district cooling)"},
+ "Tabreed":{val:"AED 2.46bn",valL:"Revenue",valY:"2025",src:"Tabreed FY2025 results (district cooling)"}
 };
 const NON_FM=new Set(["MEFMA","DEWA","Dubai Municipality","Abu Dhabi DoE","Dubai Holding","Emirates GBC","MOEI"]);
 function coRank(a,b){const fa=CO_FACTS[a[0]]||{},fb=CO_FACTS[b[0]]||{};const na=NON_FM.has(a[0])?1:0,nb=NON_FM.has(b[0])?1:0;
-  return na-nb||(fb.rev||0)-(fa.rev||0)||(fb.staff||0)-(fa.staff||0)||b[1]-a[1]||a[0].localeCompare(b[0]);}
+  return na-nb||(fb.staff||0)-(fa.staff||0)||(fb.val?1:0)-(fa.val?1:0)||b[1]-a[1]||a[0].localeCompare(b[0]);}
 function factsHTML(c){if(NON_FM.has(c))return "";const f=CO_FACTS[c]||{};
-  return `<div class="cofacts" title="${esc(f.src?"Source: "+f.src:"No public figures found")}"><span><i>Revenue</i><b>${f.revT?esc(f.revT):"Not disclosed"}</b>${f.revY?`<small>${esc(f.revY)}</small>`:""}</span><span><i>Staff</i><b>${f.staffT?esc(f.staffT):"Not disclosed"}</b></span></div>`;}
+  return `<div class="cofacts" title="${esc(f.src?"Source: "+f.src:"No public figures found")}"><span><i>Staff</i><b>${f.staffT?esc(f.staffT):"Not disclosed"}</b></span><span><i>${esc(f.valL||"Contract value")}</i><b>${f.val?esc(f.val):"Not disclosed"}</b>${f.valY?`<small>${esc(f.valY)}</small>`:""}</span></div>`;}
 function fmtDate(s){const d=pd(String(s).slice(0,10));return d.getDate()+" "+MON[d.getMonth()]+" "+d.getFullYear();}
 function persist(){save("fmpulse-ui",{svc:state.svc,co:state.co,type:state.type,emirate:state.emirate,sector:state.sector,period:state.period,tab:state.tab});}
 
