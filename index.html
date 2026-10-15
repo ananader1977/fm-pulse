@@ -466,7 +466,7 @@ function card(n){
   return `<article class="card">
     <div class="date"><div class="d">${n.approx?"~":d.getDate()}</div><div class="m">${MON[d.getMonth()]} ${String(d.getFullYear()).slice(2)}</div>${n.emirate?`<div class="a">${esc(n.emirate)}</div>`:""}</div>
     <div style="min-width:0">
-      ${photoHTML(n)}
+      ${fbHTML(n)}
       ${(n.companies||[]).length?`<div class="logos">${(n.companies||[]).filter(c=>c!=="Ejadah"||!(n.companies||[]).includes("Idama")).slice(0,3).map(c=>logoHTML(c,30)).join("")}<span class="ln">${esc((n.companies||[]).join(" · "))}</span></div>`:""}
       <h3>${esc(n.title)}</h3>
       ${typeOf(n)==="Hiring"&&n.until?`<div class="meta" style="margin-bottom:6px">${isOpen(n)?`<span class="pill open">Open until ${fmtDate(n.until)}</span>`:`<span class="pill closed">Closed ${fmtDate(n.until)}</span>`}</div>`:""}
@@ -623,7 +623,6 @@ document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g
 if(location.hash){const h=location.hash.slice(1);if(TABS.includes(h))state.tab=h;}
 if(!TABS.includes(state.tab))state.tab="dash";
 render();
-try{fetch("images/news-images.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{}).then(j=>{if(j&&typeof j==="object"){IMGS=j;render();}}).catch(()=>{});}catch(e){}
 
 const ADDR="ananader1@gmail.com";
 const CONTACT_ENDPOINT="https://script.google.com/macros/s/AKfycbwBFJZhPcuVpO8DkL-MiBii3mi5FTwe594ATvLTnDxAC2xQOvryEHw7-TdJgcjjv8Fe/exec";
