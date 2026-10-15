@@ -407,9 +407,9 @@ function photoHTML(n){
 }
 function fbHTML(n){
   const t=typeOf(n);const svc=(n.services||[]).find(s=>SVC_ICON[s])||"";
-  const icon=TYPE_ICON[t]||SVC_ICON[svc]||SVC_ICON["Awards & Industry"];
-  const label=t==="Hiring"||t==="Management Change"?t:(svc||t);
-  const sub=[t!==label?t:"",n.emirate&&n.emirate!=="UAE"?n.emirate:"UAE"].filter(Boolean).join(" · ");
+  const icon=SVC_ICON[svc]||TYPE_ICON[t]||SVC_ICON["Awards & Industry"];
+  const label=svc||t;
+  const sub=n.emirate&&n.emirate!=="UAE"?n.emirate:"UAE";
   return `<div class="ph fb" aria-hidden="true"><svg viewBox="0 0 24 24">${icon}</svg><div class="t">${esc(label)}<small>${esc(sub)}</small></div></div>`;
 }
 window.__fb=id=>{const n=state.items.find(x=>x.id===id);return n?fbHTML(n):"";};
