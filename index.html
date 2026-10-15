@@ -202,6 +202,12 @@ nav.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:re
 .ph.fb .t{font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:.06em;text-transform:uppercase;line-height:1.05;min-width:0}
 .ph.fb .t small{display:block;font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.04em;opacity:.8;text-transform:none;margin-top:4px}
 .ph.fb::after{content:"";position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;border:18px solid rgba(255,255,255,.07)}
+.ph.fb{aspect-ratio:auto;height:64px;gap:10px;padding:0 14px}
+.ph.fb svg{width:30px;height:30px}
+.ph.fb .t{font-size:17px}
+.ph.fb .t small{font-size:10.5px;margin-top:2px}
+.ph.fb::after{right:-20px;top:-34px;width:96px;height:96px;border-width:14px}
+@media (min-width:700px){.ph.fb{height:46px;padding:0 12px}.ph.fb svg{width:24px;height:24px}.ph.fb .t{font-size:15px;display:flex;align-items:baseline;gap:10px}.ph.fb .t small{margin-top:0}}
 .subh{font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
 .hp{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0}
 .status{margin:0;font-size:14px;min-height:1.2em}
