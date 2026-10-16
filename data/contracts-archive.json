@@ -380,6 +380,33 @@
     "location": "UAE",
     "durationYears": 3
    }
+  },
+  {
+   "id": "2018-03-01-efs-etihad",
+   "archive": true,
+   "companies": [
+    "EFS"
+   ],
+   "contract": {
+    "client": "Etihad Airways",
+    "durationYears": 5,
+    "location": "All Etihad Airways facilities, UAE",
+    "scope": "Integrated FM: MEP, cleaning, support and specialist services",
+    "start": "2018-04-01",
+    "valueText": "AED 140m"
+   },
+   "date": "2018-03-01",
+   "emirate": "Abu Dhabi",
+   "sector": "Transport",
+   "services": [
+    "MEP",
+    "Cleaning & Soft FM"
+   ],
+   "source": "EFS newsroom",
+   "summary": "EFS took on all facilities services (MEP, cleaning, support and specialist services) across Etihad Airways' UAE facilities under a five-year, AED 140m contract starting April 2018.",
+   "title": "EFS wins five-year integrated FM contract for Etihad Airways",
+   "type": "Contract",
+   "url": "https://newsroom.efsme.com/efs-wins-integrated-facilities-management-contract-for-etihad/"
   }
  ]
 }
