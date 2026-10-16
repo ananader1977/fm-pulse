@@ -1,0 +1,385 @@
+{
+ "items": [
+  {
+   "id": "2022-03-04-imdaad-dm-waste",
+   "archive": true,
+   "companies": [
+    "Imdaad"
+   ],
+   "date": "2022-03-04",
+   "title": "Imdaad wins three-year Dubai Municipality waste and cleaning contract",
+   "summary": "Dubai Municipality appointed Imdaad for waste collection, recycling and infrastructure cleaning in four Dubai districts, with 99 staff and 11,712 bins, for three years from March 2022.",
+   "emirate": "Dubai",
+   "sector": "Government",
+   "services": [
+    "Waste Management",
+    "Cleaning & Soft FM"
+   ],
+   "source": "GCC Business News",
+   "url": "https://www.gccbusinessnews.com/dubai-municipality-awards-3-year-fm-services-contract-to-imdaad/",
+   "type": "Contract",
+   "contract": {
+    "client": "Dubai Municipality",
+    "scope": "Waste collection, recycling and infrastructure cleaning (99 staff, 11,712 bins)",
+    "location": "Al Mizhar 1 & 2, Muhaisnah 1 and Nad Al Hamar, Dubai",
+    "durationYears": 3,
+    "start": "2022-03-01"
+   }
+  },
+  {
+   "id": "2022-04-01-imdaad-dm-industrial",
+   "archive": true,
+   "companies": [
+    "Imdaad"
+   ],
+   "date": "2022-04-01",
+   "title": "Imdaad wins Dubai Municipality cleaning contract for industrial areas",
+   "summary": "Imdaad will sweep, collect litter, level open land and clean gullies across six Dubai industrial zones for three years, deploying 222 staff.",
+   "emirate": "Dubai",
+   "sector": "Government",
+   "services": [
+    "Cleaning & Soft FM"
+   ],
+   "source": "Middle East Construction News",
+   "url": "https://meconstructionnews.com/52018/imdaad-wins-dubai-municipality-contract-for-cleaning-of-citys-industrial-areas",
+   "type": "Contract",
+   "contract": {
+    "client": "Dubai Municipality",
+    "scope": "Mechanical and manual sweeping, litter collection and gully cleaning (222 staff)",
+    "location": "Six industrial zones incl. Al Quoz, Al Qusais, Jebel Ali, Ras Al Khor, Dubai",
+    "durationYears": 3
+   },
+   "approx": true
+  },
+  {
+   "id": "2018-11-01-imdaad-iacad-mosques",
+   "archive": true,
+   "companies": [
+    "Imdaad"
+   ],
+   "date": "2018-11-01",
+   "title": "Imdaad signs AED 30m-a-year FM contract for Dubai mosques",
+   "summary": "Dubai's Islamic Affairs and Charitable Activities Department hired Imdaad for integrated FM across more than 500 mosques and over 1,200 related homes, at AED 30m a year for three renewable years.",
+   "emirate": "Dubai",
+   "sector": "Government",
+   "services": [
+    "MEP",
+    "Cleaning & Soft FM",
+    "Security",
+    "Fire & Life Safety"
+   ],
+   "source": "Gulf News",
+   "url": "https://gulfnews.com/uae/government/department-of-islamic-affairs-imdaad-sign-dh30m-contract-1.2050358",
+   "type": "Contract",
+   "contract": {
+    "client": "Islamic Affairs and Charitable Activities Department (IACAD)",
+    "scope": "Integrated FM for 500+ mosques and 1,200+ related homes",
+    "location": "Dubai",
+    "valueText": "AED 30m per year",
+    "durationYears": 3
+   },
+   "approx": true
+  },
+  {
+   "id": "2018-11-05-transguard-omniyat",
+   "archive": true,
+   "companies": [
+    "Transguard"
+   ],
+   "date": "2018-11-05",
+   "title": "Omniyat awards Transguard AED 14.5m FM contract",
+   "summary": "Transguard took on MEP, maintenance, security, cleaning and soft services for Omniyat's commercial properties in Business Bay, including The Opus, for three years.",
+   "emirate": "Dubai",
+   "sector": "Commercial",
+   "services": [
+    "MEP",
+    "Security",
+    "Cleaning & Soft FM"
+   ],
+   "source": "Gulf News",
+   "url": "https://gulfnews.com/business/omniyat-awards-transguard-dh145m-contract-1.2160714",
+   "type": "Contract",
+   "contract": {
+    "client": "Omniyat",
+    "scope": "Integrated FM: MEP, maintenance, security, cleaning and soft services",
+    "location": "Business Bay, Dubai (incl. The Opus)",
+    "valueText": "AED 14.5m",
+    "durationYears": 3
+   },
+   "approx": true
+  },
+  {
+   "id": "2016-02-29-enova-sharjah-airport",
+   "archive": true,
+   "companies": [
+    "Enova"
+   ],
+   "date": "2016-02-29",
+   "title": "Enova renews five-year Sharjah International Airport FM contract",
+   "summary": "Sharjah Airport Authority renewed Enova's contract for technical FM of airport buildings and airfield systems, adding energy performance management.",
+   "emirate": "Sharjah",
+   "sector": "Transport",
+   "services": [
+    "MEP",
+    "Energy & Sustainability"
+   ],
+   "source": "Middle East Construction News",
+   "url": "https://meconstructionnews.com/10642/enova-wins-sharjah-airports-contract-renewal",
+   "type": "Contract",
+   "contract": {
+    "client": "Sharjah Airport Authority",
+    "scope": "Technical FM: MEP, flight displays, security systems, airfield lighting and runway maintenance, energy management",
+    "location": "Sharjah International Airport",
+    "durationYears": 5
+   }
+  },
+  {
+   "id": "2026-01-13-berkeley-burj-khalifa",
+   "archive": true,
+   "companies": [
+    "Berkeley"
+   ],
+   "date": "2026-01-13",
+   "title": "Berkeley's Burj Khalifa cleaning contract extended from 2026",
+   "summary": "Emaar extended Berkeley Services' maintenance cleaning of the Burj Khalifa (lobby, offices, residences and visitor areas) from 1 January 2026; Berkeley has cleaned the tower since it opened in 2010.",
+   "emirate": "Dubai",
+   "sector": "Mixed",
+   "services": [
+    "Cleaning & Soft FM"
+   ],
+   "source": "Klüh Group",
+   "url": "https://www.klueh.de/en/news/press-and-media/press-detail/klueh-secures-contract-extension-for-the-burj-khalifa",
+   "type": "Contract",
+   "contract": {
+    "client": "Emaar (Burj Khalifa)",
+    "scope": "Maintenance cleaning: lobby, offices, residences and visitor areas",
+    "location": "Burj Khalifa, Downtown Dubai",
+    "start": "2026-01-01"
+   }
+  },
+  {
+   "id": "2017-01-19-berkeley-cayan-tower",
+   "archive": true,
+   "companies": [
+    "Berkeley"
+   ],
+   "date": "2017-01-19",
+   "title": "Berkeley wins full FM contract for Cayan Tower",
+   "summary": "Berkeley Services was awarded complete facility management of Dubai Marina's Cayan Tower, covering cleaning, security, landscaping, laundry, waste and pest control.",
+   "emirate": "Dubai",
+   "sector": "Residential",
+   "services": [
+    "Cleaning & Soft FM",
+    "Security",
+    "Waste Management"
+   ],
+   "source": "Klüh Group",
+   "url": "https://www.klueh.de/fileadmin/user_upload/klueh_de/documents/Presse/2017/EN/20170119-PR-Klueh-receives-new-order-for-the-CAYAN-TOWER.pdf",
+   "type": "Contract",
+   "contract": {
+    "client": "Cayan Tower",
+    "scope": "Complete FM: cleaning, security, landscaping, laundry, waste and pest control",
+    "location": "Dubai Marina"
+   }
+  },
+  {
+   "id": "2026-01-30-dulsco-sevens-stadium",
+   "archive": true,
+   "companies": [
+    "DULSCO"
+   ],
+   "date": "2026-01-30",
+   "title": "Dulsco extends waste contract with The Sevens Stadium to 2027",
+   "summary": "Dulsco Environment expanded its agreement to run year-round waste management at The Sevens Stadium, including the Emirates Dubai 7s, through 2027.",
+   "emirate": "Dubai",
+   "sector": "Hospitality & Leisure",
+   "services": [
+    "Waste Management"
+   ],
+   "source": "Middle East Construction News",
+   "url": "https://meconstructionnews.com/66025/dulsco-environment-strengthens-partnership-with-the-sevens-stadium",
+   "type": "Contract",
+   "contract": {
+    "client": "The Sevens Stadium (Emirates)",
+    "scope": "Year-round waste management incl. Emirates Dubai 7s; runs to 2027",
+    "location": "Dubai"
+   }
+  },
+  {
+   "id": "2023-06-05-dulsco-premier-inn",
+   "archive": true,
+   "companies": [
+    "DULSCO"
+   ],
+   "date": "2023-06-05",
+   "title": "Premier Inn appoints Dulsco for hotel waste management",
+   "summary": "Premier Inn Middle East appointed Dulsco Environment as waste management provider for its Dubai hotels, with segregation, staff training and audits.",
+   "emirate": "Dubai",
+   "sector": "Hospitality & Leisure",
+   "services": [
+    "Waste Management",
+    "Energy & Sustainability"
+   ],
+   "source": "Breaking Travel News",
+   "url": "https://www.breakingtravelnews.com/news/article/premier-inn-steps-up-sustainability-drive-in-new-partnership-with-dulsco-en",
+   "type": "Contract",
+   "contract": {
+    "client": "Premier Inn Middle East",
+    "scope": "Waste management, segregation, staff training and audits",
+    "location": "Premier Inn hotels, Dubai"
+   }
+  },
+  {
+   "id": "2021-09-13-serveu-ayedh-tower",
+   "archive": true,
+   "companies": [
+    "ServeU"
+   ],
+   "date": "2021-09-13",
+   "title": "ServeU wins three-year FM contract for Ayedh Tower",
+   "summary": "ServeU will provide all FM services, including cleaning, lifeguards and MEP, for the Ayedh Tower residential building in Al Jaddaf for three years.",
+   "emirate": "Dubai",
+   "sector": "Residential",
+   "services": [
+    "MEP",
+    "Cleaning & Soft FM"
+   ],
+   "source": "Middle East Construction News",
+   "url": "https://meconstructionnews.com/49208/serveu-wins-contract-to-provide-fm-services-to-ayedh-hussein-bin-dejem-real-estate-group",
+   "type": "Contract",
+   "contract": {
+    "client": "Ayedh Hussein Bin Dejem Real Estate Group",
+    "scope": "Full FM: cleaning, lifeguards and MEP for Ayedh Tower",
+    "location": "Al Jaddaf, Dubai",
+    "durationYears": 3
+   }
+  },
+  {
+   "id": "2021-09-04-serveu-expo-pavilions",
+   "archive": true,
+   "companies": [
+    "ServeU"
+   ],
+   "date": "2021-09-04",
+   "title": "ServeU wins AED 18m FM and staffing contracts for 14 Expo 2020 pavilions",
+   "summary": "ServeU secured 14 contracts worth AED 18m to provide FM and staffing, including guides, cleaning, security and logistics, for Expo 2020 Dubai pavilions.",
+   "emirate": "Dubai",
+   "sector": "Government",
+   "services": [
+    "Cleaning & Soft FM",
+    "Security"
+   ],
+   "source": "Gulf News",
+   "url": "https://gulfnews.com/business/property/union-properties-subsidiary-serveu-wins-contract-for-facilities-management-of-14-pavilions-at-expo-2020-dubai-1.82025622",
+   "type": "Contract",
+   "contract": {
+    "client": "14 Expo 2020 Dubai pavilions",
+    "scope": "FM and staffing: guides, cleaning, security, admin and logistics",
+    "location": "Expo 2020 site, Dubai",
+    "valueText": "AED 18m (14 contracts)"
+   }
+  },
+  {
+   "id": "2026-03-16-engie-b1-mall",
+   "archive": true,
+   "companies": [
+    "ENGIE Solutions"
+   ],
+   "date": "2026-03-16",
+   "title": "JLL appoints ENGIE Solutions for integrated FM at B1 Mall",
+   "summary": "ENGIE Solutions took on fully integrated hard and soft FM, security and specialist systems, including chillers and water features, at B1 Mall in Al Barsha for JLL.",
+   "emirate": "Dubai",
+   "sector": "Retail",
+   "services": [
+    "MEP",
+    "HVAC",
+    "Security",
+    "Cleaning & Soft FM"
+   ],
+   "source": "TradeArabia",
+   "url": "https://tradearabia.com/News/390330/JLL-signs-up-Engie-to-deliver-FM-services-at-key-Dubai-retail-destination",
+   "type": "Contract",
+   "contract": {
+    "client": "JLL (B1 Mall)",
+    "scope": "Integrated hard and soft FM, security, chiller plant and water features",
+    "location": "Al Barsha 1, Dubai"
+   }
+  },
+  {
+   "id": "2020-10-01-idama-deira-waterfront",
+   "archive": true,
+   "companies": [
+    "Idama",
+    "Ejadah"
+   ],
+   "date": "2020-10-01",
+   "title": "Idama wins multi-year O&M contract for Deira Waterfront Properties",
+   "summary": "Ithra Dubai appointed Idama for operations and maintenance of the first Deira Waterfront completions, covering handover, MEP and fabric, soft services, a 24-hour help desk and CAFM.",
+   "emirate": "Dubai",
+   "sector": "Mixed",
+   "services": [
+    "MEP",
+    "Cleaning & Soft FM",
+    "Technology & AI"
+   ],
+   "source": "CM-Today",
+   "url": "https://www.cm-today.com/news/ifm/ejadah-s-fm-arm-wins-the-deira-waterfront-properties-contract",
+   "type": "Contract",
+   "contract": {
+    "client": "Ithra Dubai",
+    "scope": "O&M: handover and DLP, MEP and fabric, soft services, help desk, CAFM",
+    "location": "Deira Waterfront, Dubai"
+   }
+  },
+  {
+   "id": "2020-09-17-farnek-dubai-developments",
+   "archive": true,
+   "companies": [
+    "Farnek"
+   ],
+   "date": "2020-09-17",
+   "title": "Dubai Developments picks Farnek for three-year FM of four properties",
+   "summary": "Farnek took on MEP, HVAC, cleaning, pest control and landscaping for Blue Tower, Al Murooj residences, Village Mall and Al Hudaiba Award Complex, mobilising over 100 staff.",
+   "emirate": "Dubai",
+   "sector": "Mixed",
+   "services": [
+    "MEP",
+    "HVAC",
+    "Cleaning & Soft FM"
+   ],
+   "source": "Middle East Construction News",
+   "url": "https://meconstructionnews.com/43411/dubai-developments-selects-farnek-for-facilities-management-in-key-properties",
+   "type": "Contract",
+   "contract": {
+    "client": "Dubai Developments",
+    "scope": "Integrated FM: MEP, HVAC, cleaning, pest control, landscaping (100+ staff)",
+    "location": "Blue Tower, Al Murooj, Village Mall, Al Hudaiba Award, Dubai",
+    "durationYears": 3
+   }
+  },
+  {
+   "id": "2019-10-03-khidmah-moe",
+   "archive": true,
+   "companies": [
+    "Khidmah"
+   ],
+   "date": "2019-10-03",
+   "title": "Khidmah wins three-year Ministry of Education FM contract",
+   "summary": "The Ministry of Education awarded Khidmah maintenance and FM services for its assets for three years.",
+   "emirate": "UAE",
+   "sector": "Education",
+   "services": [
+    "MEP"
+   ],
+   "source": "Middle East Construction News",
+   "url": "https://meconstructionnews.com/37144/khidmah-wins-big-with-14-contracts-across-uae",
+   "type": "Contract",
+   "contract": {
+    "client": "Ministry of Education",
+    "scope": "Maintenance and FM services for ministry assets",
+    "location": "UAE",
+    "durationYears": 3
+   }
+  }
+ ]
+}

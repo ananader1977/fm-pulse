@@ -1,4 +1,5 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.cofacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:2px 0}.cofacts span{background:var(--surface-2);border-radius:8px;padding:6px 9px;min-width:0}.cofacts i{display:block;font-style:normal;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.cofacts b{font-family:var(--f-display);font-size:17px;font-weight:700;letter-spacing:.02em;white-space:nowrap}.cofacts small{display:block;font-family:var(--f-mono);font-size:10.5px;color:var(--muted)}
+.keyco li.kc{display:flex;flex-direction:column;gap:3px;align-items:flex-start}.keyco li.kc+li.kc{border-top:1px solid var(--line);padding-top:10px}.keyco li.kc .sc{font-size:13px}.keyco li.kc .ctr-grid{margin:4px 0 2px;font-size:12.5px;width:100%}
 </style></head><body>
 <title>FM Pulse UAE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -428,6 +429,10 @@ const ROLE_MAP=[[/rope/i,"Rope Access"],[/cctv operator/i,"CCTV Operator"],[/hse
 function roleGroup(r){for(const [re,l] of ROLE_MAP){if(re.test(r))return l;}return String(r).trim();}
 const pad2=x=>String(x).padStart(2,"0");
 const ymd=d=>d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
+function ctrAmt(c){const m=String(c.valueText||"").match(/AED\s*([\d.]+)\s*(bn|m)/i);if(!m)return 0;let v=parseFloat(m[1])*(/bn/i.test(m[2])?1e9:1e6);if(/per year/i.test(c.valueText)&&c.durationYears)v*=c.durationYears;return v;}
+function ctrRank(a,b){return ctrAmt(b.i.c)-ctrAmt(a.i.c)||(b.i.c.durationYears||0)-(a.i.c.durationYears||0)||b.n.date.localeCompare(a.n.date);}
+function ctrItem(x){const c=x.i.c,n=x.n;const d=pd(c.start||n.date);const aw=(n.approx&&!c.start?"":MON[d.getMonth()]+" ")+d.getFullYear();
+  return `<li class="kc"><b>${esc(c.client||n.title)}</b>${c.scope?`<div class="sc">${esc(c.scope)}</div>`:""}<dl class="ctr-grid"><dt>Location</dt><dd>${esc(c.location||n.emirate||"—")}</dd><dt>Value</dt><dd>${c.valueText?esc(c.valueText):"Not disclosed"}</dd><dt>Duration</dt><dd>${c.durationYears?c.durationYears+" years":"Not stated"}</dd><dt>${c.start?"Start":"Reported"}</dt><dd>${esc(aw)}</dd></dl>${n.url?`<a class="src" style="margin-left:0" href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.source||"Source")} ↗</a>`:""}</li>`;}
 function ctrInfo(n){
   const c=n.contract||{};const start=c.start||n.date;
   const yr=n.approx&&!c.start?String(pd(start).getFullYear()):MON[pd(start).getMonth()]+" "+pd(start).getFullYear();
@@ -541,9 +546,9 @@ function render(){
   const coList=[...byCo].sort((a,b)=>b[1].length-a[1].length||a[0].localeCompare(b[0]));
   $("#keyNote").textContent=coList.length+" companies";
   $("#keyCo").innerHTML=coList.length?coList.map(([co,arr])=>{
-    const s=[...arr].sort((a,b)=>b.n.date.localeCompare(a.n.date));
-    const li=s.slice(0,4).map(x=>`<li><b>${esc(x.i.c.client||x.n.title)}</b>${x.i.c.scope?` <span class="sc">· ${esc(x.i.c.scope)}</span>`:""}<span class="pill ${x.i.cls}">${esc(x.i.label)}</span></li>`).join("");
-    const more=s.length>4?`<button class="more" data-kc="${esc(co)}">+${s.length-4} more · show all</button>`:"";
+    const s=[...arr].sort(ctrRank);const top=state.co===co?s:s.slice(0,3);
+    const li=top.map(ctrItem).join("");
+    const more=s.length>top.length?`<button class="more" data-kc="${esc(co)}">+${s.length-top.length} more · show all</button>`:"";
     return `<div class="keyco"><div class="top" style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span class="who">${logoHTML(co,36)}<span class="nm" style="font-family:var(--f-display);font-weight:600;font-size:18px;letter-spacing:.03em;text-transform:uppercase">${esc(co)}</span></span><span class="ct" style="font-family:var(--f-mono);font-size:13px;color:var(--accent)">${arr.length}</span></div><ul>${li}</ul>${more}</div>`;}).join(""):`<div class="empty-state">No contracts match these filters.</div>`;
   $("#keyCo").querySelectorAll("[data-kc]").forEach(b=>b.onclick=()=>{state.co=b.dataset.kc;persist();render();});
   const other=call.filter(n=>!n.contract&&typeOf(n)==="Contract");
