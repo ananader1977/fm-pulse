@@ -613,7 +613,7 @@ function render(){
   $("#svcTiles").querySelectorAll(".tile").forEach(b=>b.onclick=()=>{state.svc=b.dataset.s;state.tab="feed";persist();render();scrollTo(0,0);});
 
   // companies view
-  const cbase=filtered({ignoreCo:true});const cc=count(cbase,"companies");
+  const cbase=filtered({ignoreCo:true});const cc=count(cbase,"companies");if(state.co)[...cc.keys()].forEach(k=>{if(k!==state.co)cc.delete(k);});
   $("#coNote").textContent=cc.size+" companies · by staff";
   $("#coTiles").innerHTML=cc.size?[...cc].sort(coRank).map(([c,v])=>{const its=cbase.filter(n=>(n.companies||[]).includes(c));
     const svcs=[...count(its,"services")].sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]).join(" · ");
