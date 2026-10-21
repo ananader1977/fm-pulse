@@ -259,6 +259,8 @@ nav.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1
 nav.tabs button[aria-selected="true"]{color:var(--accent)}
 nav.tabs button[aria-selected="true"] svg{stroke:var(--accent)}
 .foot{font-size:12px;color:var(--muted);margin-top:26px;text-align:center}
+.exp-row{display:flex;justify-content:flex-end;margin:0 0 10px}.exp-row .btn{font-size:13px;padding:6px 12px}
+.tile .nm small.par{display:block;font-family:var(--f-body);font-weight:400;font-size:11.5px;letter-spacing:0;text-transform:none;color:var(--muted)}
 /* staff login gate */
 body:not(.authed)>:not(#gate):not(script):not(style):not(link):not(title){display:none!important}
 body.authed #gate{display:none}
@@ -408,6 +410,7 @@ body.authed #gate{display:none}
   </section>
 
   <section class="view" id="v-feed" hidden>
+    <div class="exp-row"><button class="btn" type="button" data-export="feed">Export to Excel (CSV)</button></div>
     <div id="feedFilter"></div>
     <div id="feed"></div>
   </section>
@@ -428,6 +431,7 @@ body.authed #gate{display:none}
 
   <section class="view" id="v-ctr" hidden>
     <div class="sh" style="margin-top:4px"><h2>Key contracts by company</h2><span id="keyNote"></span></div>
+    <div class="exp-row"><button class="btn" type="button" data-export="ctr">Export contracts to Excel (CSV)</button></div>
     <div class="tiles" id="keyCo"></div>
     <div class="subh">Other contract news</div>
     <div class="list" id="ctrOther"></div>
@@ -571,7 +575,7 @@ function fbHTML(n){
   return `<div class="ph fb" aria-hidden="true"><svg viewBox="0 0 24 24">${icon}</svg><div class="t">${esc(label)}<small>${esc(sub)}</small></div></div>`;
 }
 window.__fb=id=>{const n=state.items.find(x=>x.id===id);return n?fbHTML(n):"";};
-const SECTOR_LABEL=s=>s==="Mixed"?"Mixed / not specific":s;
+const SECTOR_LABEL=s=>s==="Mixed"?"Multi-sector / company-wide":s;
 const sectorOf=n=>n.sector||"Mixed";
 const emirateOf=n=>n.emirate||"UAE";
 const ROLE_MAP=[[/rope/i,"Rope Access"],[/cctv operator/i,"CCTV Operator"],[/hse/i,"HSE Officer / Inspector"],[/mep (supervisor|team lead)/i,"MEP Supervisor"],[/engineer/i,"Engineer (FM / MEP)"],[/hvac|chiller|chilled|mechanical/i,"HVAC / Mechanical Technician"],[/electric/i,"Electrician"],[/plumb/i,"Plumber"],[/bms|scada/i,"BMS / SCADA Operator"],[/elv|cctv/i,"ELV / CCTV Technician"],[/security|guard/i,"Security Guard"],[/multi/i,"Multi-skilled Technician"],[/mep/i,"MEP Technician"],[/stp/i,"STP Operator"],[/supervisor|team lead|camp boss/i,"Supervisor"],[/housekeep|room attendant|steward/i,"Housekeeping / Steward"],[/machine operator|clean/i,"Cleaner"],[/lifeguard/i,"Lifeguard"],[/laundry|washer|press man/i,"Laundry"],[/civil|mason|carpenter/i,"Civil / Carpentry Trades"],[/coordinator|admin|document|reception|cafm/i,"Admin / Coordinator"],[/driver|helper/i,"Driver / Helper"],[/manager/i,"Manager"]];
@@ -650,13 +654,15 @@ function filtered(opts={}){
     if(state.emirate && emirateOf(n)!==state.emirate) return false;
     if(!opts.ignoreSector && state.sector && sectorOf(n)!==state.sector) return false;
     if(!opts.ignoreSvc && state.svc && !(n.services||[]).includes(state.svc)) return false;
-    if(!opts.ignoreCo && state.co && !(n.companies||[]).includes(state.co)) return false;
+    if(!opts.ignoreCo && state.co && !coHas(n,state.co)) return false;
     if(!opts.ignoreType && state.type && typeOf(n)!==state.type) return false;
     if(q && !((n.title+" "+n.summary+" "+(n.type||"")+" "+(n.companies||[]).join(" ")+" "+((n.contract&&n.contract.client)||"")).toLowerCase().includes(q))) return false;
     return true;
   }).sort((a,b)=>b.date.localeCompare(a.date));
 }
-function companies(){const s=new Set();state.items.forEach(n=>(n.companies||[]).forEach(c=>s.add(c)));return [...s].sort();}
+const CO_PARENT={"Khidmah":"Aldar Estates","Idama":"Ejadah","Serco ME":"Khadamat"};
+function coHas(n,co){const cs=n.companies||[];return cs.includes(co)||cs.some(c=>CO_PARENT[c]===co);}
+function companies(){const s=new Set();state.items.forEach(n=>(n.companies||[]).forEach(c=>{s.add(c);if(CO_PARENT[c])s.add(CO_PARENT[c]);}));return [...s].sort();}
 function count(list,key){const m=new Map();list.forEach(n=>(n[key]||[]).forEach(v=>m.set(v,(m.get(v)||0)+1)));return m;}
 
 function card(n){
@@ -804,11 +810,11 @@ function render(){
   $("#svcTiles").querySelectorAll(".tile").forEach(b=>b.onclick=()=>{state.svc=b.dataset.s;state.tab="feed";persist();render();scrollTo(0,0);});
 
   // companies view
-  const cbase=filtered({ignoreCo:true});const cc=count(cbase,"companies");if(state.co)[...cc.keys()].forEach(k=>{if(k!==state.co)cc.delete(k);});
+  const cbase=filtered({ignoreCo:true});const cc=count(cbase,"companies");if(state.co)[...cc.keys()].forEach(k=>{if(k!==state.co&&CO_PARENT[k]!==state.co)cc.delete(k);});
   $("#coNote").textContent=cc.size+" companies · by staff";
   $("#coTiles").innerHTML=cc.size?[...cc].sort(coRank).map(([c,v])=>{const its=cbase.filter(n=>(n.companies||[]).includes(c));
     const svcs=[...count(its,"services")].sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]).join(" · ");
-    return `<button class="tile" data-c="${esc(c)}"><div class="top"><span class="who">${logoHTML(c,36)}<span class="nm">${esc(c)}</span></span><span class="ct">${v}</span></div>
+    return `<button class="tile" data-c="${esc(c)}"><div class="top"><span class="who">${logoHTML(c,36)}<span class="nm">${esc(c)}${CO_PARENT[c]?`<small class="par">Part of ${esc(CO_PARENT[c])}</small>`:""}</span></span><span class="ct">${v}</span></div>
     ${factsHTML(c)}<div class="lt">${esc(its[0].title)}</div><div class="lt" style="font-family:var(--f-mono);font-size:11.5px">${esc(svcs)}</div></button>`;}).join(""):emptyBox();
   $("#coTiles").querySelectorAll(".tile[data-c]").forEach(b=>b.onclick=()=>{state.co=b.dataset.c;state.tab="feed";persist();render();scrollTo(0,0);});
 }
@@ -850,6 +856,25 @@ if(location.hash){const h=location.hash.slice(1);if(TABS.includes(h))state.tab=h
 if(!TABS.includes(state.tab))state.tab="dash";
 render();
 
+function csvCell(v){v=v==null?"":String(v);return /[",\r\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function exportItems(kind){
+  if(kind==="ctr")return filtered({includeArchive:true,ignorePeriod:true,ignoreType:true}).filter(n=>typeOf(n)==="Contract");
+  return filtered();
+}
+async function doExport(kind){
+  const its=exportItems(kind);
+  const H=["Date","Title","Summary","Companies","Type","Services","Emirate","Sector","Client","Scope","Location","Value","Duration (years)","Start","Archive record","Roles","Until","Where","Source","Link"];
+  const rows=its.map(n=>{const c=n.contract||{};return [n.date,n.title,n.summary,(n.companies||[]).join("; "),typeOf(n),(n.services||[]).join("; "),emirateOf(n),SECTOR_LABEL(sectorOf(n)),c.client,c.scope,c.location,c.valueText,c.durationYears,c.start,n.archive?"Yes":"",(n.roles||[]).join("; "),n.until,n.where,n.source,n.url];});
+  const csv="﻿"+[H,...rows].map(r=>r.map(csvCell).join(",")).join("\r\n");
+  const d=new Date(),ds=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  const name="FM-Pulse-"+(kind==="ctr"?"contracts":"news")+"-"+ds+".csv";
+  let dl=null;try{dl=window.claude&&window.claude.use?await window.claude.use("downloads"):null;}catch(e){dl=null;}
+  if(dl){try{await dl.save({filename:name,data:csv});return;}catch(e){if(e&&(e.code==="declined"||e.code==="rate_limited"))return;}}
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download=name;
+  document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500);
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-export]");if(b){e.preventDefault();doExport(b.dataset.export);}});
+
 const ADDR="ananader1@gmail.com";
 const CONTACT_ENDPOINT="https://script.google.com/macros/s/AKfycbwBFJZhPcuVpO8DkL-MiBii3mi5FTwe594ATvLTnDxAC2xQOvryEHw7-TdJgcjjv8Fe/exec";
 function updMail(){$("#mailLink").href="mailto:"+ADDR+"?subject="+encodeURIComponent($("#cSubject").value||"FM Pulse UAE");}
@@ -888,7 +913,7 @@ async function loadDaily(){
     const m=await r.json();const files=Array.isArray(m.files)?m.files:[];
     const days=await Promise.all(files.map(f=>fetch("data/"+f+V).then(x=>x.ok?x.json().then(fmDec):{items:[]}).catch(()=>({items:[]}))));
     const byId=new Map(state.items.map(n=>[n.id,n]));
-    days.forEach(d=>(d.items||[]).forEach(n=>{if(n&&n.id&&n.title&&n.date)byId.set(n.id,n)}));
+    days.forEach(d=>(d.items||[]).forEach(n=>{if(n&&n.id&&n.deleted){byId.delete(n.id);return;}if(n&&n.id&&n.title&&n.date)byId.set(n.id,n)}));
     state.items=[...byId.values()].sort((a,b)=>b.date.localeCompare(a.date));
     const lu=[state.meta&&state.meta.lastUpdated,m.updated].filter(Boolean).sort().pop();
     state.meta=Object.assign({},state.meta,{lastUpdated:lu});state.loaded=true;
